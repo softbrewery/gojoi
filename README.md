@@ -1,3 +1,5 @@
+![gojoi Logo](https://raw.github.com/softbrewery/gojoi/master/images/gojoi.png)
+
 # gojoi
 
 Object schema description language and validator for golang. (Inspired by [Hapi.js Joi](https://github.com/hapijs/joi) library)
