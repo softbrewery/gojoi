@@ -1,17 +1,16 @@
 package joi
 
 import (
-	"errors"
 	"reflect"
 )
 
 // AnySchema Error definitions
 var (
-	ErrType      = errors.New("Value of wrong type")
-	ErrRequired  = errors.New("Value is required")
-	ErrForbidden = errors.New("Value is forbidden")
-	ErrAllow     = errors.New("Value is not matching allowed values")
-	ErrDisallow  = errors.New("Value is matching disallowed values")
+	ErrAnyType      = NewError("interface", "Value of wrong data type")
+	ErrAnyRequired  = NewError("interface", "Value is required")
+	ErrAnyForbidden = NewError("interface", "Value is forbidden")
+	ErrAnyAllow     = NewError("interface", "Value is not matching allowed values")
+	ErrAnyDisallow  = NewError("interface", "Value is matching disallowed values")
 )
 
 // AnySchema ...
@@ -104,11 +103,11 @@ func (s *AnySchema) Validate(value interface{}) error {
 	}
 	// Validate Forbidden
 	if IsSet(s.forbidden) && *s.forbidden == true && value != nil {
-		return ErrForbidden
+		return ErrAnyForbidden
 	}
 	// Validate Required
 	if IsSet(s.required) && *s.required == true && value == nil {
-		return ErrRequired
+		return ErrAnyRequired
 	}
 	// Validate Allow
 	if IsSet(s.allow) {
@@ -120,14 +119,14 @@ func (s *AnySchema) Validate(value interface{}) error {
 			}
 		}
 		if !match {
-			return ErrAllow
+			return ErrAnyAllow
 		}
 	}
 	// Validate Disallow
 	if IsSet(s.disallow) {
 		for _, a := range *s.disallow {
 			if value == a {
-				return ErrDisallow
+				return ErrAnyDisallow
 			}
 		}
 	}

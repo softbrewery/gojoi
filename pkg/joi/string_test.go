@@ -23,17 +23,17 @@ var _ = Describe("String", func() {
 
 		It("Should fail if data type is slice", func() {
 			s := String()
-			Expect(s.Validate([]string{"hello", "world"})).To(Equal(ErrType))
+			Expect(s.Validate([]string{"hello", "world"})).To(Equal(ErrAnyType))
 		})
 
 		It("Should fail if data type is int", func() {
 			s := String()
-			Expect(s.Validate(100)).To(Equal(ErrType))
+			Expect(s.Validate(100)).To(Equal(ErrAnyType))
 		})
 
 		It("Should fail if data type is bool", func() {
 			s := String()
-			Expect(s.Validate(true)).To(Equal(ErrType))
+			Expect(s.Validate(true)).To(Equal(ErrAnyType))
 		})
 	})
 

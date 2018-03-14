@@ -1,15 +1,14 @@
 package joi
 
 import (
-	"errors"
 	"reflect"
 )
 
 // SliceSchema Error definitions
 var (
-	ErrMin    = errors.New("Value is smaller than min")
-	ErrMax    = errors.New("Value is larger than max")
-	ErrLength = errors.New("Value is not matching length")
+	ErrSliceMin    = NewError("slice", "Slice is smaller than min")
+	ErrSliceMax    = NewError("slice", "Slice is larger than max")
+	ErrSliceLength = NewError("slice", "Slice is not matching length")
 )
 
 // SliceSchema ...
@@ -69,22 +68,22 @@ func (s *SliceSchema) Validate(value interface{}) error {
 	vValue := reflect.ValueOf(value)
 
 	if vValue.Kind().String() != "slice" {
-		return ErrType
+		return ErrAnyType
 	}
 
 	vLength := vValue.Len()
 
 	// Validate Min
 	if IsSet(s.min) && *s.min > vLength {
-		return ErrMin
+		return ErrSliceMin
 	}
 	// Validate Max
 	if IsSet(s.max) && *s.max < vLength {
-		return ErrMax
+		return ErrSliceMax
 	}
 	// Validate Length
 	if IsSet(s.length) && *s.length != vLength {
-		return ErrLength
+		return ErrSliceLength
 	}
 	// Validate Items
 	if IsSet(s.items) {

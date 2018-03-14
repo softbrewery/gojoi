@@ -1,15 +1,14 @@
 package joi
 
 import (
-	"errors"
 	"reflect"
 )
 
 // StringSchema Error definitions
 var (
-	ErrStringMin    = errors.New("Value is smaller")
-	ErrStringMax    = errors.New("Value is bigger")
-	ErrStringLength = errors.New("Value is out of length")
+	ErrStringMin    = NewError("string", "Value is smaller")
+	ErrStringMax    = NewError("string", "Value is bigger")
+	ErrStringLength = NewError("string", "Value is out of length")
 )
 
 // StringSchema ...
@@ -61,7 +60,7 @@ func (s *StringSchema) Validate(value interface{}) error {
 	vValue := reflect.ValueOf(value)
 
 	if vValue.Kind().String() != "string" {
-		return ErrType
+		return ErrAnyType
 	}
 
 	cValue := vValue.String()

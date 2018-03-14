@@ -74,7 +74,7 @@ var _ = Describe("Any", func() {
 
 		It("Error should be not nil if value is required and not set", func() {
 			s := Any().Required()
-			Expect(s.Validate(nil)).To(Equal(ErrRequired))
+			Expect(s.Validate(nil)).To(Equal(ErrAnyRequired))
 		})
 	})
 
@@ -87,7 +87,11 @@ var _ = Describe("Any", func() {
 
 		It("Error should be not nil if value is forbidden and set", func() {
 			s := Any().Forbidden()
-			Expect(s.Validate(10)).To(Equal(ErrForbidden))
+			e := &Error{
+				Schema:   s.Kind(),
+				ErrorMsg: "Value is forbidden",
+			}
+			Expect(s.Validate(10)).To(Equal(e))
 		})
 	})
 
@@ -99,7 +103,7 @@ var _ = Describe("Any", func() {
 			Expect(s.Validate(10)).To(BeNil())
 			Expect(s.Validate(20)).To(BeNil())
 
-			Expect(s.Validate(100)).To(Equal(ErrAllow))
+			Expect(s.Validate(100)).To(Equal(ErrAnyAllow))
 		})
 
 		It("Error should be nil if value is in allow list (string)", func() {
@@ -108,14 +112,14 @@ var _ = Describe("Any", func() {
 			Expect(s.Validate("name")).To(BeNil())
 			Expect(s.Validate("isbn")).To(BeNil())
 
-			Expect(s.Validate("author")).To(Equal(ErrAllow))
+			Expect(s.Validate("author")).To(Equal(ErrAnyAllow))
 		})
 
 		It("Error should be nil if value is in allow list (bool)", func() {
 			s := Any().Allow(true)
 			Expect(s.Validate(true)).To(BeNil())
 
-			Expect(s.Validate(false)).To(Equal(ErrAllow))
+			Expect(s.Validate(false)).To(Equal(ErrAnyAllow))
 		})
 	})
 
@@ -123,25 +127,25 @@ var _ = Describe("Any", func() {
 
 		It("Error should be not nil if value is in disallow list (int)", func() {
 			s := Any().Disallow(0, 10, 20)
-			Expect(s.Validate(0)).To(Equal(ErrDisallow))
-			Expect(s.Validate(10)).To(Equal(ErrDisallow))
-			Expect(s.Validate(20)).To(Equal(ErrDisallow))
+			Expect(s.Validate(0)).To(Equal(ErrAnyDisallow))
+			Expect(s.Validate(10)).To(Equal(ErrAnyDisallow))
+			Expect(s.Validate(20)).To(Equal(ErrAnyDisallow))
 
 			Expect(s.Validate(100)).To(BeNil())
 		})
 
 		It("Error should be not nil if value is in disallow list (string)", func() {
 			s := Any().Disallow("id", "name", "isbn")
-			Expect(s.Validate("id")).To(Equal(ErrDisallow))
-			Expect(s.Validate("name")).To(Equal(ErrDisallow))
-			Expect(s.Validate("isbn")).To(Equal(ErrDisallow))
+			Expect(s.Validate("id")).To(Equal(ErrAnyDisallow))
+			Expect(s.Validate("name")).To(Equal(ErrAnyDisallow))
+			Expect(s.Validate("isbn")).To(Equal(ErrAnyDisallow))
 
 			Expect(s.Validate("author")).To(BeNil())
 		})
 
 		It("Error should be not nil if value is in disallow list (bool)", func() {
 			s := Any().Disallow(true)
-			Expect(s.Validate(true)).To(Equal(ErrDisallow))
+			Expect(s.Validate(true)).To(Equal(ErrAnyDisallow))
 
 			Expect(s.Validate(false)).To(BeNil())
 		})
