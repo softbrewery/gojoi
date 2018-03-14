@@ -120,10 +120,17 @@ schema := joi.Any().Description("my description")
 
 #### `Any().Transform(stage TransformStage, fn TransformFunc)`
 
-Allows to inject a custom tranformation function, which can be used to
-- Define custom validators
-- Modify the value being validated
+Allows to run custom tranformation functions where:
+- `stage` - defines the stage that triggers this transform
+- `fn` - function that will be executes
 
+Allowed staged:
+- `joi.TransformStagePRE` - Executes before the validation starts
+- `joi.TransformStagePOST` - Executes after the validation has finished
+
+Use this functionality to:
+- Inject custom validators
+- Transform or normalize values 
 
 TransformFunc type definition
 ```go
@@ -147,8 +154,46 @@ fn := func(value interface{}) (interface{}, error) {
 }
 
 // Build schema
-schema := joi.Any().Allow("name").Transform(TransformStagePRE, fn)
+schema := joi.Any().Allow("name").Transform(joi.TransformStagePRE, fn)
 
 // Validate
 err := joi.Validate("id", schema) // err == nil
+```
+
+### `String`
+
+Generates a schema object that matches string data type.
+
+```go
+schema := joi.String()
+```
+
+#### `String().Min(limit int)`
+
+Specifies the minimum number string characters where:
+
+- `limit` - the minimum number of string characters required.
+
+```go
+schema := joi.String().Min(2)
+```
+
+#### `String().Max(limit int)`
+
+Specifies the maximum number string characters where:
+
+- `limit` - the maximum number of string characters allowed.
+
+```go
+schema := joi.String().Max(10)
+```
+
+#### `String().Length(limit int)`
+
+Specifies the exact string length required where:
+
+- `limit` - the required string length.
+
+```go
+schema := joi.String().Length(5)
 ```
