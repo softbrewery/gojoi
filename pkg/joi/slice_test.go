@@ -39,7 +39,7 @@ var _ = Describe("Slice", func() {
 
 	Describe("Kind", func() {
 
-		It("Should return interface", func() {
+		It("Should return slice", func() {
 			s := Slice()
 			Expect(s.Kind()).To(Equal("slice"))
 		})

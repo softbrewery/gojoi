@@ -39,7 +39,7 @@ var _ = Describe("String", func() {
 
 	Describe("Kind", func() {
 
-		It("Should return interface", func() {
+		It("Should return string", func() {
 			s := String()
 			Expect(s.Kind()).To(Equal("string"))
 		})

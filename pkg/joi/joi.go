@@ -24,6 +24,11 @@ func Slice() *SliceSchema {
 	return NewSliceSchema()
 }
 
+// Bool ...
+func Bool() *BoolSchema {
+	return NewBoolSchema()
+}
+
 // Validate ...
 func Validate(value interface{}, schema Schema) error {
 	if !IsSet(schema) {

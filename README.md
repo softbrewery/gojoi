@@ -254,3 +254,14 @@ Specifies the exact number of items in the slice where:
 ```go
 schema := joi.Slice().Length(5)
 ```
+---
+
+### `Bool` - inherits from `Any`
+
+Generates a schema object that matches bool data type.
+
+Supports the same methods of the any() type.
+
+```go
+schema := joi.Bool()
+```
