@@ -3,6 +3,7 @@ package joi_test
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"github.com/softbrewery/gojoi/pkg/joi"
 	. "github.com/softbrewery/gojoi/pkg/joi"
 )
 
@@ -109,6 +110,32 @@ var _ = Describe("Slice", func() {
 		It("Error should be not nil if value is bigger than", func() {
 			s := Slice().Length(3)
 			Expect(s.Validate(data)).To(Equal(ErrSliceLength))
+		})
+	})
+
+	Describe("Items", func() {
+
+		data := []string{"hello", "world"}
+
+		It("Error should be nil if items are matching Any", func() {
+			s := Slice().Items(
+				joi.Any(),
+			)
+			Expect(s.Validate(data)).To(BeNil())
+		})
+
+		It("Error should be nil if items are matching String", func() {
+			s := Slice().Items(
+				joi.String(),
+			)
+			Expect(s.Validate(data)).To(BeNil())
+		})
+
+		It("Error should be not nil if items are not matching", func() {
+			s := Slice().Items(
+				joi.Slice(),
+			)
+			Expect(s.Validate(data)).To(Equal(ErrAnyType))
 		})
 	})
 })

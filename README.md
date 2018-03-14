@@ -160,6 +160,8 @@ schema := joi.Any().Allow("name").Transform(joi.TransformStagePRE, fn)
 err := joi.Validate("id", schema) // err == nil
 ```
 
+---
+
 ### `String` - inherits from `Any`
 
 Generates a schema object that matches string data type.
@@ -198,4 +200,57 @@ Specifies the exact string length required where:
 
 ```go
 schema := joi.String().Length(5)
+```
+---
+
+### `Slice` - inherits from `Any`
+
+Generates a schema object that matches slice [] data type.
+
+Supports the same methods of the any() type.
+
+```go
+schema := joi.Slice()
+```
+
+#### `Slice().Items(schema Schema)`
+
+Lists the types allowed for the array values where:
+
+- `schema` - a joi schema object to validate each array item against. `schema` can be an array of values, or multiple values can be passed as individual arguments.
+
+```go
+schema := joi.Slice().Items(
+    joi.String(),
+).Max(10)
+```
+
+#### `Slice().Min(limit int)`
+
+Specifies the minimum number of items in the slice where:
+
+- `limit` - the lowest number of array items allowed.
+
+```go
+schema := joi.Slice().Min(2)
+```
+
+#### `Slice().Max(limit int)`
+
+Specifies the maximum number of items in the slice where:
+
+- `limit` - the highest number of array items allowed.
+
+```go
+schema := joi.Slice().Max(10)
+```
+
+#### `Slice().Length(limit int)`
+
+Specifies the exact number of items in the slice where:
+
+- `limit` - the number of array items allowed.
+
+```go
+schema := joi.Slice().Length(5)
 ```
