@@ -18,7 +18,7 @@ var (
 type ArraySchema struct {
 	AnySchema
 
-	items Schema
+	items *Schema
 
 	min    *int
 	max    *int
@@ -39,7 +39,7 @@ func (s *ArraySchema) Kind() string {
 
 // Items ...
 func (s *ArraySchema) Items(schema Schema) *ArraySchema {
-	s.items = schema
+	s.items = &schema
 	return s
 }
 
@@ -86,7 +86,7 @@ func (s *ArraySchema) Validate(value interface{}) error {
 	// Validate Items
 	if utils.IsSet(s.items) {
 		for i := 0; i < vLength; i++ {
-			err := s.items.Root().Validate(vValue.Index(i).Interface())
+			err := (*s.items).Root().Validate(vValue.Index(i).Interface())
 			if err != nil {
 				return err
 			}
