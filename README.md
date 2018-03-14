@@ -160,9 +160,11 @@ schema := joi.Any().Allow("name").Transform(joi.TransformStagePRE, fn)
 err := joi.Validate("id", schema) // err == nil
 ```
 
-### `String`
+### `String` - inherits from `Any`
 
 Generates a schema object that matches string data type.
+
+Supports the same methods of the any() type.
 
 ```go
 schema := joi.String()
