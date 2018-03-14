@@ -19,9 +19,9 @@ func String() *StringSchema {
 	return NewStringSchema()
 }
 
-// Array ...
-func Array() *ArraySchema {
-	return NewArraySchema()
+// Slice ...
+func Slice() *SliceSchema {
+	return NewSliceSchema()
 }
 
 // Validate ...

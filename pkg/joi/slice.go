@@ -5,15 +5,15 @@ import (
 	"reflect"
 )
 
-// AnySchema Error definitions
+// SliceSchema Error definitions
 var (
 	ErrMin    = errors.New("Value is smaller than min")
 	ErrMax    = errors.New("Value is larger than max")
 	ErrLength = errors.New("Value is not matching length")
 )
 
-// ArraySchema ...
-type ArraySchema struct {
+// SliceSchema ...
+type SliceSchema struct {
 	AnySchema
 
 	items *Schema
@@ -23,44 +23,44 @@ type ArraySchema struct {
 	length *int
 }
 
-// NewArraySchema ...
-func NewArraySchema() *ArraySchema {
-	s := &ArraySchema{}
+// NewSliceSchema ...
+func NewSliceSchema() *SliceSchema {
+	s := &SliceSchema{}
 	s.root = s
 	return s
 }
 
 // Kind ...
-func (s *ArraySchema) Kind() string {
+func (s *SliceSchema) Kind() string {
 	return reflect.Slice.String()
 }
 
 // Items ...
-func (s *ArraySchema) Items(schema Schema) *ArraySchema {
+func (s *SliceSchema) Items(schema Schema) *SliceSchema {
 	s.items = &schema
 	return s
 }
 
 // Min ...
-func (s *ArraySchema) Min(min int) *ArraySchema {
+func (s *SliceSchema) Min(min int) *SliceSchema {
 	s.min = &min
 	return s
 }
 
 // Max ...
-func (s *ArraySchema) Max(max int) *ArraySchema {
+func (s *SliceSchema) Max(max int) *SliceSchema {
 	s.max = &max
 	return s
 }
 
 // Length ...
-func (s *ArraySchema) Length(length int) *ArraySchema {
+func (s *SliceSchema) Length(length int) *SliceSchema {
 	s.length = &length
 	return s
 }
 
 // Validate ...
-func (s *ArraySchema) Validate(value interface{}) error {
+func (s *SliceSchema) Validate(value interface{}) error {
 	err := s.AnySchema.Validate(value)
 	if err != nil {
 		return err

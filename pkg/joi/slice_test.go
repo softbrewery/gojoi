@@ -11,19 +11,19 @@ var _ = Describe("Array", func() {
 	Describe("Array", func() {
 
 		It("Array", func() {
-			s := Array()
+			s := Slice()
 			Expect(s).ToNot(BeNil())
 		})
 
 		It("Array", func() {
-			s := Array().Min(2)
+			s := Slice().Min(2)
 			v := []string{"id", "title"}
 			err := s.Validate(v)
 			Expect(err).To(BeNil())
 		})
 
 		It("Array", func() {
-			s := Array().Items(
+			s := Slice().Items(
 				String().Allow("id", "title"),
 			)
 			v := []string{"id", "title"}
@@ -32,7 +32,7 @@ var _ = Describe("Array", func() {
 		})
 
 		It("Array", func() {
-			s := Array().Items(
+			s := Slice().Items(
 				String().Allow("id", "title"),
 			)
 			v := []string{"id", "title", "isbn"}
