@@ -1,10 +1,37 @@
 # gojoi
 
+Object schema description language and validator for golang. (Inspired by [Hapi.js Joi](https://github.com/hapijs/joi) library)
+
 [![Build Status](https://travis-ci.org/softbrewery/gojoi.svg?branch=master)](https://travis-ci.org/softbrewery/gojoi)
 
 ## Install
 ```shell
 $ go get github.com/softbrewery/gojoi
+```
+
+## Usage
+
+Usage is a two steps process; 
+
+First, a schema is constructed:
+
+```go
+schema := joi.String()
+```
+
+Then the value is validated against the schema:
+
+```go
+err := joi.Validate("hello", schema)
+```
+If the input is valid, then the error will be nil, otherwise it will be an Error object.
+
+Schema definitions can be chained.
+```go
+schema := joi.String().
+            Max(32).
+            Required().
+            Description("some value")
 ```
 
 ## Api
@@ -123,5 +150,5 @@ fn := func(value interface{}) (interface{}, error) {
 schema := joi.Any().Allow("name").Transform(TransformStagePRE, fn)
 
 // Validate
-err := schema.Validate("id") // err == nil
+err := joi.Validate("id", schema) // err == nil
 ```
