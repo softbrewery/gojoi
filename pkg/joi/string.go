@@ -1,30 +1,24 @@
 package joi
 
 import (
+	"errors"
 	"reflect"
-	"regexp"
+)
+
+// StringSchema Error definitions
+var (
+	ErrStringMin    = errors.New("Value is smaller")
+	ErrStringMax    = errors.New("Value is bigger")
+	ErrStringLength = errors.New("Value is out of length")
 )
 
 // StringSchema ...
 type StringSchema struct {
 	AnySchema
 
-	min       *int
-	max       *int
-	length    *int
-	regex     *regexp.Regexp
-	alphanum  *bool
-	token     *bool
-	email     *bool
-	ip        *bool
-	uri       *bool
-	guid      *bool
-	hex       *bool
-	base64    *bool
-	hostname  *bool
-	lowercase *bool
-	uppercase *bool
-	trim      *bool
+	min    *int
+	max    *int
+	length *int
 }
 
 // NewStringSchema ...
@@ -62,6 +56,24 @@ func (s *StringSchema) Validate(value interface{}) error {
 	err := s.AnySchema.Validate(value)
 	if err != nil {
 		return err
+	}
+
+	cValue, i := value.(string)
+	if !i {
+		return ErrType
+	}
+
+	// Validate Min
+	if IsSet(s.min) && *s.min > len(cValue) {
+		return ErrStringMin
+	}
+	// Validate Max
+	if IsSet(s.max) && *s.max < len(cValue) {
+		return ErrStringMax
+	}
+	// Validate Length
+	if IsSet(s.length) && *s.length != len(cValue) {
+		return ErrStringLength
 	}
 
 	return nil

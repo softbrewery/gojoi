@@ -3,8 +3,6 @@ package joi
 import (
 	"errors"
 	"reflect"
-
-	"github.com/softbrewery/gojoi/pkg/joi/utils"
 )
 
 // AnySchema Error definitions
@@ -72,19 +70,19 @@ func (s *ArraySchema) Validate(value interface{}) error {
 	vLength := vValue.Len()
 
 	// Validate Min
-	if utils.IsSet(s.min) && *s.min > vLength {
+	if IsSet(s.min) && *s.min > vLength {
 		return ErrMin
 	}
 	// Validate Max
-	if utils.IsSet(s.max) && *s.max < vLength {
+	if IsSet(s.max) && *s.max < vLength {
 		return ErrMax
 	}
 	// Validate Length
-	if utils.IsSet(s.length) && *s.length != vLength {
+	if IsSet(s.length) && *s.length != vLength {
 		return ErrLength
 	}
 	// Validate Items
-	if utils.IsSet(s.items) {
+	if IsSet(s.items) {
 		for i := 0; i < vLength; i++ {
 			err := (*s.items).Root().Validate(vValue.Index(i).Interface())
 			if err != nil {

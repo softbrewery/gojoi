@@ -9,3 +9,6 @@ setup:
 
 test:
 	ginkgo -r
+
+test-watch:
+	ginkgo watch -r -v

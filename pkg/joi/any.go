@@ -3,24 +3,29 @@ package joi
 import (
 	"errors"
 	"reflect"
-
-	"github.com/softbrewery/gojoi/pkg/joi/utils"
 )
 
 // AnySchema Error definitions
 var (
+	ErrType      = errors.New("Value of wrong type")
 	ErrRequired  = errors.New("Value is required")
 	ErrForbidden = errors.New("Value is forbidden")
 	ErrAllow     = errors.New("Value is not matching allowed values")
+	ErrDisallow  = errors.New("Value is matching disallowed values")
 )
 
 // AnySchema ...
 type AnySchema struct {
 	root Schema
 
+	description *string
+
 	required  *bool
 	forbidden *bool
 	allow     *[]interface{}
+	disallow  *[]interface{}
+
+	transform map[TransformStage]TransformFunc
 }
 
 // NewAnySchema ...
@@ -40,15 +45,21 @@ func (s *AnySchema) Root() Schema {
 	return s.root
 }
 
+// Description ...
+func (s *AnySchema) Description(description string) *AnySchema {
+	s.description = &description
+	return s
+}
+
 // Required ...
 func (s *AnySchema) Required() *AnySchema {
-	s.required = utils.BoolToPointer(true)
+	s.required = BoolToPointer(true)
 	return s
 }
 
 // Forbidden ...
 func (s *AnySchema) Forbidden() *AnySchema {
-	s.forbidden = utils.BoolToPointer(true)
+	s.forbidden = BoolToPointer(true)
 	return s
 }
 
@@ -58,26 +69,86 @@ func (s *AnySchema) Allow(values ...interface{}) *AnySchema {
 	return s
 }
 
+// Disallow ...
+func (s *AnySchema) Disallow(values ...interface{}) *AnySchema {
+	s.disallow = &values
+	return s
+}
+
+// TransformStage ...
+type TransformStage int
+
+// TransformStageEnums
+const (
+	TransformStagePRE TransformStage = 1 + iota
+	TransformStagePOST
+)
+
+// TransformFunc ...
+type TransformFunc func(interface{}) (interface{}, error)
+
+// Transform ...
+func (s *AnySchema) Transform(stage TransformStage, f TransformFunc) *AnySchema {
+	if !IsSet(s.transform) {
+		s.transform = make(map[TransformStage]TransformFunc)
+	}
+	s.transform[stage] = f
+	return s
+}
+
 // Validate ...
 func (s *AnySchema) Validate(value interface{}) error {
+	// Validate PRE Transform
+	if err := s.runTransform(TransformStagePRE, &value); err != nil {
+		return err
+	}
 	// Validate Forbidden
-	if utils.IsSet(s.forbidden) && *s.forbidden == true && value != nil {
+	if IsSet(s.forbidden) && *s.forbidden == true && value != nil {
 		return ErrForbidden
 	}
 	// Validate Required
-	if utils.IsSet(s.required) && *s.required == true && value == nil {
+	if IsSet(s.required) && *s.required == true && value == nil {
 		return ErrRequired
 	}
 	// Validate Allow
-	if utils.IsSet(s.allow) {
+	if IsSet(s.allow) {
 		match := false
 		for _, a := range *s.allow {
 			if value == a {
 				match = true
+				break
 			}
 		}
 		if !match {
 			return ErrAllow
+		}
+	}
+	// Validate Disallow
+	if IsSet(s.disallow) {
+		for _, a := range *s.disallow {
+			if value == a {
+				return ErrDisallow
+			}
+		}
+	}
+	// Validate POST Transform
+	if err := s.runTransform(TransformStagePOST, &value); err != nil {
+		return err
+	}
+
+	// All ok
+	return nil
+}
+
+func (s *AnySchema) runTransform(stage TransformStage, value *interface{}) error {
+	if IsSet(s.transform) {
+		f := s.transform[stage]
+		if f != nil {
+			tValue, err := s.transform[stage](*value)
+			if err != nil {
+				return err
+			}
+			*value = tValue
 		}
 	}
 	return nil
