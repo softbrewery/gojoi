@@ -58,10 +58,13 @@ func (s *StringSchema) Validate(value interface{}) error {
 		return err
 	}
 
-	cValue, i := value.(string)
-	if !i {
+	vValue := reflect.ValueOf(value)
+
+	if vValue.Kind().String() != "string" {
 		return ErrType
 	}
+
+	cValue := vValue.String()
 
 	// Validate Min
 	if IsSet(s.min) && *s.min > len(cValue) {

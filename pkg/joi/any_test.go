@@ -18,6 +18,26 @@ var _ = Describe("Any", func() {
 			s := Any()
 			Expect(s).ToNot(BeNil())
 		})
+
+		It("Should pass if data type is string", func() {
+			s := Any()
+			Expect(s.Validate("hello")).To(BeNil())
+		})
+
+		It("Should pass if data type is slice", func() {
+			s := Any()
+			Expect(s.Validate([]string{"hello", "world"})).To(BeNil())
+		})
+
+		It("Should pass if data type is int", func() {
+			s := Any()
+			Expect(s.Validate(100)).To(BeNil())
+		})
+
+		It("Should pass if data type is bool", func() {
+			s := Any()
+			Expect(s.Validate(true)).To(BeNil())
+		})
 	})
 
 	Describe("Kind", func() {

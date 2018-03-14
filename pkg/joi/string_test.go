@@ -15,6 +15,26 @@ var _ = Describe("String", func() {
 			s := String()
 			Expect(s).ToNot(BeNil())
 		})
+
+		It("Should pass if data type is string", func() {
+			s := String()
+			Expect(s.Validate("hello")).To(BeNil())
+		})
+
+		It("Should fail if data type is slice", func() {
+			s := String()
+			Expect(s.Validate([]string{"hello", "world"})).To(Equal(ErrType))
+		})
+
+		It("Should fail if data type is int", func() {
+			s := String()
+			Expect(s.Validate(100)).To(Equal(ErrType))
+		})
+
+		It("Should fail if data type is bool", func() {
+			s := String()
+			Expect(s.Validate(true)).To(Equal(ErrType))
+		})
 	})
 
 	Describe("Kind", func() {
@@ -69,7 +89,7 @@ var _ = Describe("String", func() {
 		})
 	})
 
-	Describe("Max", func() {
+	Describe("Length", func() {
 
 		It("Error should be not nil if value is smaller than", func() {
 			s := String().Length(4)

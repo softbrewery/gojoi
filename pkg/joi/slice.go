@@ -67,6 +67,11 @@ func (s *SliceSchema) Validate(value interface{}) error {
 	}
 
 	vValue := reflect.ValueOf(value)
+
+	if vValue.Kind().String() != "slice" {
+		return ErrType
+	}
+
 	vLength := vValue.Len()
 
 	// Validate Min
