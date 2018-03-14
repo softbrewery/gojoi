@@ -26,12 +26,17 @@ err := joi.Validate("hello", schema)
 ```
 If the input is valid, then the error will be nil, otherwise it will be an Error object.
 
-Schema definitions can be chained.
+Example to validate slice of strings:
 ```go
-schema := joi.String().
-            Max(32).
-            Required().
-            Description("some value")
+schema := joi.Slice().Items(
+    joi.String(),
+)
+
+data := []string{"hello", "world"}
+
+err := joi.Validate(data, schema)
+
+// err == nil
 ```
 
 ## Api
