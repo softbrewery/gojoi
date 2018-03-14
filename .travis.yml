@@ -13,5 +13,5 @@ matrix:
     - go: tip
 
 script: 
-  - go get ./...
+  - make setup
   - make test
