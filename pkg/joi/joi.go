@@ -29,6 +29,11 @@ func Bool() *BoolSchema {
 	return NewBoolSchema()
 }
 
+// Struct ...
+func Struct() *StructSchema {
+	return NewStructSchema()
+}
+
 // Validate ...
 func Validate(value interface{}, schema Schema) error {
 	if !IsSet(schema) {
