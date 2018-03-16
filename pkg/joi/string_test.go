@@ -21,6 +21,12 @@ var _ = Describe("String", func() {
 			Expect(s.Validate("hello")).To(BeNil())
 		})
 
+		It("Should fail if Any property fails", func() {
+			s := String().Required()
+
+			Expect(s.Validate(nil)).To(Equal(ErrAnyRequired))
+		})
+
 		It("Should fail if data type is slice", func() {
 			s := String()
 			Expect(s.Validate([]string{"hello", "world"})).To(Equal(ErrAnyType))

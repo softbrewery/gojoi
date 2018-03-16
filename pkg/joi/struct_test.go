@@ -28,6 +28,12 @@ var _ = Describe("Struct", func() {
 			Expect(s.Validate(data)).To(BeNil())
 		})
 
+		It("Should fail if Any property fails", func() {
+			s := Struct().Required()
+
+			Expect(s.Validate(nil)).To(Equal(ErrAnyRequired))
+		})
+
 		It("Should fail if data type is slice", func() {
 			s := Struct()
 			Expect(s.Validate([]string{"hello", "world"})).To(Equal(ErrAnyType))

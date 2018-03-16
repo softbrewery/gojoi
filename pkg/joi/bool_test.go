@@ -21,6 +21,12 @@ var _ = Describe("Bool", func() {
 			Expect(s.Validate(true)).To(BeNil())
 		})
 
+		It("Should fail if Any property fails", func() {
+			s := Bool().Required()
+
+			Expect(s.Validate(nil)).To(Equal(ErrAnyRequired))
+		})
+
 		It("Should fail if data type is string", func() {
 			s := Bool()
 			Expect(s.Validate("hello")).To(Equal(ErrAnyType))
