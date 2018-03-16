@@ -2,13 +2,11 @@ all:
 
 clean:
 
-setup:
-	go get ./...
-	go get -u github.com/onsi/ginkgo/ginkgo
-	go get -u github.com/onsi/gomega/...  
-
 test:
-	ginkgo -r
+	ginkgo -r --randomizeAllSpecs --randomizeSuites --failOnPending --cover --trace
 
 test-watch:
 	ginkgo watch -r -v
+
+test-travis:
+	ginkgo -r --randomizeAllSpecs --randomizeSuites --failOnPending --cover -coverprofile=coverage.txt -covermode=atomic --trace --race --compilers=2
