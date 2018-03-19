@@ -112,4 +112,40 @@ var _ = Describe("String", func() {
 			Expect(s.Validate("hello")).To(Equal(ErrStringLength))
 		})
 	})
+
+	Describe("UpperCase", func() {
+
+		It("Error should be nil if value is uppercase", func() {
+			s := String().UpperCase()
+			Expect(s.Validate("HELLO")).To(BeNil())
+		})
+
+		It("Error should be not nil if value is lowercase", func() {
+			s := String().UpperCase()
+			Expect(s.Validate("hello")).To(Equal(ErrStringUpperCase))
+		})
+
+		It("Error should be not nil if value is CamelCase", func() {
+			s := String().UpperCase()
+			Expect(s.Validate("HelloWorld")).To(Equal(ErrStringUpperCase))
+		})
+	})
+
+	Describe("LowerCase", func() {
+
+		It("Error should be nil if value is lowercase", func() {
+			s := String().LowerCase()
+			Expect(s.Validate("hello")).To(BeNil())
+		})
+
+		It("Error should be not nil if value is uppercase", func() {
+			s := String().LowerCase()
+			Expect(s.Validate("HELLO")).To(Equal(ErrStringLowerCase))
+		})
+
+		It("Error should be not nil if value is CamelCase", func() {
+			s := String().LowerCase()
+			Expect(s.Validate("HelloWorld")).To(Equal(ErrStringLowerCase))
+		})
+	})
 })

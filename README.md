@@ -211,6 +211,24 @@ schema := joi.String().Length(5)
 ```
 ---
 
+#### `String().UpperCase()`
+
+Requires the string value to be all uppercase.
+
+```go
+schema := joi.String().UpperCase()
+```
+---
+
+#### `String().LowerCase()`
+
+Requires the string value to be all lowercase.
+
+```go
+schema := joi.String().LowerCase()
+```
+---
+
 ### `Slice` - inherits from `Any`
 
 Generates a schema object that matches slice [] data type.

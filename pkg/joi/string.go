@@ -2,22 +2,27 @@ package joi
 
 import (
 	"reflect"
+	"strings"
 )
 
 // StringSchema Error definitions
 var (
-	ErrStringMin    = NewError("string", "Value is smaller")
-	ErrStringMax    = NewError("string", "Value is bigger")
-	ErrStringLength = NewError("string", "Value is out of length")
+	ErrStringMin       = NewError("string", "Value is smaller")
+	ErrStringMax       = NewError("string", "Value is bigger")
+	ErrStringLength    = NewError("string", "Value is out of length")
+	ErrStringUpperCase = NewError("string", "Value is not uppercase")
+	ErrStringLowerCase = NewError("string", "Value is not lowercase")
 )
 
 // StringSchema ...
 type StringSchema struct {
 	AnySchema
 
-	min    *int
-	max    *int
-	length *int
+	min       *int
+	max       *int
+	length    *int
+	uppercase *bool
+	lowercase *bool
 }
 
 // NewStringSchema ...
@@ -50,6 +55,18 @@ func (s *StringSchema) Length(length int) *StringSchema {
 	return s
 }
 
+// UpperCase ...
+func (s *StringSchema) UpperCase() *StringSchema {
+	s.uppercase = BoolToPointer(true)
+	return s
+}
+
+// LowerCase ...
+func (s *StringSchema) LowerCase() *StringSchema {
+	s.lowercase = BoolToPointer(true)
+	return s
+}
+
 // Validate ...
 func (s *StringSchema) Validate(value interface{}) error {
 	err := s.AnySchema.Validate(value)
@@ -76,6 +93,14 @@ func (s *StringSchema) Validate(value interface{}) error {
 	// Validate Length
 	if IsSet(s.length) && *s.length != len(cValue) {
 		return ErrStringLength
+	}
+	// Validate UpperCase
+	if IsSet(s.uppercase) && *s.uppercase == true && strings.ToUpper(cValue) != cValue {
+		return ErrStringUpperCase
+	}
+	// Validate LowerCase
+	if IsSet(s.lowercase) && *s.lowercase == true && strings.ToLower(cValue) != cValue {
+		return ErrStringLowerCase
 	}
 
 	return nil
