@@ -34,6 +34,11 @@ func Struct() *StructSchema {
 	return NewStructSchema()
 }
 
+// Int ...
+func Int() *IntSchema {
+	return NewIntSchema()
+}
+
 // Validate ...
 func Validate(value interface{}, schema Schema) error {
 	if !IsSet(schema) {
