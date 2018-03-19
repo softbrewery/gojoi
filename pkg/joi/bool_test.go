@@ -18,28 +18,28 @@ var _ = Describe("Bool", func() {
 
 		It("Should pass if data type is bool", func() {
 			s := Bool()
-			Expect(s.Validate(true)).To(BeNil())
+			Expect(Validate(true, s)).To(BeNil())
 		})
 
 		It("Should fail if Any property fails", func() {
 			s := Bool().Required()
 
-			Expect(s.Validate(nil)).To(Equal(ErrAnyRequired))
+			Expect(Validate(nil, s)).To(Equal(ErrAnyRequired))
 		})
 
 		It("Should fail if data type is string", func() {
 			s := Bool()
-			Expect(s.Validate("hello")).To(Equal(ErrAnyType))
+			Expect(Validate("hello", s)).To(Equal(ErrAnyType))
 		})
 
 		It("Should fail if data type is slice", func() {
 			s := Bool()
-			Expect(s.Validate([]string{"hello", "world"})).To(Equal(ErrAnyType))
+			Expect(Validate([]string{"hello", "world"}, s)).To(Equal(ErrAnyType))
 		})
 
 		It("Should fail if data type is int", func() {
 			s := Bool()
-			Expect(s.Validate(100)).To(Equal(ErrAnyType))
+			Expect(Validate(100, s)).To(Equal(ErrAnyType))
 		})
 	})
 
