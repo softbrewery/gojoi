@@ -18,28 +18,28 @@ var _ = Describe("Slice", func() {
 
 		It("Should pass if data type is slice", func() {
 			s := Slice()
-			Expect(s.Validate([]string{})).To(BeNil())
+			Expect(Validate([]string{}, s)).To(BeNil())
 		})
 
 		It("Should fail if Any property fails", func() {
 			s := Slice().Required()
 
-			Expect(s.Validate(nil)).To(Equal(ErrAnyRequired))
+			Expect(Validate(nil, s)).To(Equal(ErrAnyRequired))
 		})
 
 		It("Should fail if data type is string", func() {
 			s := Slice()
-			Expect(s.Validate("hello")).To(Equal(ErrAnyType))
+			Expect(Validate("hello", s)).To(Equal(ErrAnyType))
 		})
 
 		It("Should fail if data type is int", func() {
 			s := Slice()
-			Expect(s.Validate(100)).To(Equal(ErrAnyType))
+			Expect(Validate(100, s)).To(Equal(ErrAnyType))
 		})
 
 		It("Should fail if data type is bool", func() {
 			s := Slice()
-			Expect(s.Validate(true)).To(Equal(ErrAnyType))
+			Expect(Validate(true, s)).To(Equal(ErrAnyType))
 		})
 	})
 
@@ -65,17 +65,17 @@ var _ = Describe("Slice", func() {
 
 		It("Error should be nil if slice is bigger than", func() {
 			s := Slice().Min(1)
-			Expect(s.Validate(data)).To(BeNil())
+			Expect(Validate(data, s)).To(BeNil())
 		})
 
 		It("Error should be nil if slice is equal", func() {
 			s := Slice().Min(2)
-			Expect(s.Validate(data)).To(BeNil())
+			Expect(Validate(data, s)).To(BeNil())
 		})
 
 		It("Error should be not nil if slice is smaller than", func() {
 			s := Slice().Min(3)
-			Expect(s.Validate(data)).To(Equal(ErrSliceMin))
+			Expect(Validate(data, s)).To(Equal(ErrSliceMin))
 		})
 	})
 
@@ -85,17 +85,17 @@ var _ = Describe("Slice", func() {
 
 		It("Error should be nil if slice is smaller than", func() {
 			s := Slice().Max(3)
-			Expect(s.Validate(data)).To(BeNil())
+			Expect(Validate(data, s)).To(BeNil())
 		})
 
 		It("Error should be nil if slice is equal", func() {
 			s := Slice().Max(2)
-			Expect(s.Validate(data)).To(BeNil())
+			Expect(Validate(data, s)).To(BeNil())
 		})
 
 		It("Error should be not nil if slice is bigger than", func() {
 			s := Slice().Max(1)
-			Expect(s.Validate(data)).To(Equal(ErrSliceMax))
+			Expect(Validate(data, s)).To(Equal(ErrSliceMax))
 		})
 	})
 
@@ -105,17 +105,17 @@ var _ = Describe("Slice", func() {
 
 		It("Error should be not nil if value is smaller than", func() {
 			s := Slice().Length(1)
-			Expect(s.Validate(data)).To(Equal(ErrSliceLength))
+			Expect(Validate(data, s)).To(Equal(ErrSliceLength))
 		})
 
 		It("Error should be nil if value is equal", func() {
 			s := Slice().Length(2)
-			Expect(s.Validate(data)).To(BeNil())
+			Expect(Validate(data, s)).To(BeNil())
 		})
 
 		It("Error should be not nil if value is bigger than", func() {
 			s := Slice().Length(3)
-			Expect(s.Validate(data)).To(Equal(ErrSliceLength))
+			Expect(Validate(data, s)).To(Equal(ErrSliceLength))
 		})
 	})
 
@@ -127,21 +127,21 @@ var _ = Describe("Slice", func() {
 			s := Slice().Items(
 				joi.Any(),
 			)
-			Expect(s.Validate(data)).To(BeNil())
+			Expect(Validate(data, s)).To(BeNil())
 		})
 
 		It("Error should be nil if items are matching String", func() {
 			s := Slice().Items(
 				joi.String(),
 			)
-			Expect(s.Validate(data)).To(BeNil())
+			Expect(Validate(data, s)).To(BeNil())
 		})
 
 		It("Error should be not nil if items are not matching", func() {
 			s := Slice().Items(
 				joi.Slice(),
 			)
-			Expect(s.Validate(data)).To(Equal(ErrAnyType))
+			Expect(Validate(data, s)).To(Equal(ErrAnyType))
 		})
 	})
 })

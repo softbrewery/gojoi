@@ -18,28 +18,28 @@ var _ = Describe("String", func() {
 
 		It("Should pass if data type is string", func() {
 			s := String()
-			Expect(s.Validate("hello")).To(BeNil())
+			Expect(Validate("hello", s)).To(BeNil())
 		})
 
 		It("Should fail if Any property fails", func() {
 			s := String().Required()
 
-			Expect(s.Validate(nil)).To(Equal(ErrAnyRequired))
+			Expect(Validate(nil, s)).To(Equal(ErrAnyRequired))
 		})
 
 		It("Should fail if data type is slice", func() {
 			s := String()
-			Expect(s.Validate([]string{"hello", "world"})).To(Equal(ErrAnyType))
+			Expect(Validate([]string{"hello", "world"}, s)).To(Equal(ErrAnyType))
 		})
 
 		It("Should fail if data type is int", func() {
 			s := String()
-			Expect(s.Validate(100)).To(Equal(ErrAnyType))
+			Expect(Validate(100, s)).To(Equal(ErrAnyType))
 		})
 
 		It("Should fail if data type is bool", func() {
 			s := String()
-			Expect(s.Validate(true)).To(Equal(ErrAnyType))
+			Expect(Validate(true, s)).To(Equal(ErrAnyType))
 		})
 	})
 
@@ -63,17 +63,17 @@ var _ = Describe("String", func() {
 
 		It("Error should be nil if value is bigger than", func() {
 			s := String().Min(4)
-			Expect(s.Validate("hello")).To(BeNil())
+			Expect(Validate("hello", s)).To(BeNil())
 		})
 
 		It("Error should be nil if value is equal", func() {
 			s := String().Min(5)
-			Expect(s.Validate("hello")).To(BeNil())
+			Expect(Validate("hello", s)).To(BeNil())
 		})
 
 		It("Error should be not nil if value is smaller than", func() {
 			s := String().Min(6)
-			Expect(s.Validate("hello")).To(Equal(ErrStringMin))
+			Expect(Validate("hello", s)).To(Equal(ErrStringMin))
 		})
 	})
 
@@ -81,17 +81,17 @@ var _ = Describe("String", func() {
 
 		It("Error should be nil if value is smaller than", func() {
 			s := String().Max(6)
-			Expect(s.Validate("hello")).To(BeNil())
+			Expect(Validate("hello", s)).To(BeNil())
 		})
 
 		It("Error should be nil if value is equal", func() {
 			s := String().Max(5)
-			Expect(s.Validate("hello")).To(BeNil())
+			Expect(Validate("hello", s)).To(BeNil())
 		})
 
 		It("Error should be not nil if value is bigger than", func() {
 			s := String().Max(4)
-			Expect(s.Validate("hello")).To(Equal(ErrStringMax))
+			Expect(Validate("hello", s)).To(Equal(ErrStringMax))
 		})
 	})
 
@@ -99,17 +99,17 @@ var _ = Describe("String", func() {
 
 		It("Error should be not nil if value is smaller than", func() {
 			s := String().Length(4)
-			Expect(s.Validate("hello")).To(Equal(ErrStringLength))
+			Expect(Validate("hello", s)).To(Equal(ErrStringLength))
 		})
 
 		It("Error should be nil if value is equal", func() {
 			s := String().Length(5)
-			Expect(s.Validate("hello")).To(BeNil())
+			Expect(Validate("hello", s)).To(BeNil())
 		})
 
 		It("Error should be not nil if value is bigger than", func() {
 			s := String().Length(6)
-			Expect(s.Validate("hello")).To(Equal(ErrStringLength))
+			Expect(Validate("hello", s)).To(Equal(ErrStringLength))
 		})
 	})
 
@@ -117,17 +117,17 @@ var _ = Describe("String", func() {
 
 		It("Error should be nil if value is uppercase", func() {
 			s := String().UpperCase()
-			Expect(s.Validate("HELLO")).To(BeNil())
+			Expect(Validate("HELLO", s)).To(BeNil())
 		})
 
 		It("Error should be not nil if value is lowercase", func() {
 			s := String().UpperCase()
-			Expect(s.Validate("hello")).To(Equal(ErrStringUpperCase))
+			Expect(Validate("hello", s)).To(Equal(ErrStringUpperCase))
 		})
 
 		It("Error should be not nil if value is CamelCase", func() {
 			s := String().UpperCase()
-			Expect(s.Validate("HelloWorld")).To(Equal(ErrStringUpperCase))
+			Expect(Validate("HelloWorld", s)).To(Equal(ErrStringUpperCase))
 		})
 	})
 
@@ -135,17 +135,17 @@ var _ = Describe("String", func() {
 
 		It("Error should be nil if value is lowercase", func() {
 			s := String().LowerCase()
-			Expect(s.Validate("hello")).To(BeNil())
+			Expect(Validate("hello", s)).To(BeNil())
 		})
 
 		It("Error should be not nil if value is uppercase", func() {
 			s := String().LowerCase()
-			Expect(s.Validate("HELLO")).To(Equal(ErrStringLowerCase))
+			Expect(Validate("HELLO", s)).To(Equal(ErrStringLowerCase))
 		})
 
 		It("Error should be not nil if value is CamelCase", func() {
 			s := String().LowerCase()
-			Expect(s.Validate("HelloWorld")).To(Equal(ErrStringLowerCase))
+			Expect(Validate("HelloWorld", s)).To(Equal(ErrStringLowerCase))
 		})
 	})
 })

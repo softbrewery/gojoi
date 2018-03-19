@@ -25,28 +25,28 @@ var _ = Describe("Struct", func() {
 
 			s := Struct()
 
-			Expect(s.Validate(data)).To(BeNil())
+			Expect(Validate(data, s)).To(BeNil())
 		})
 
 		It("Should fail if Any property fails", func() {
 			s := Struct().Required()
 
-			Expect(s.Validate(nil)).To(Equal(ErrAnyRequired))
+			Expect(Validate(nil, s)).To(Equal(ErrAnyRequired))
 		})
 
 		It("Should fail if data type is slice", func() {
 			s := Struct()
-			Expect(s.Validate([]string{"hello", "world"})).To(Equal(ErrAnyType))
+			Expect(Validate([]string{"hello", "world"}, s)).To(Equal(ErrAnyType))
 		})
 
 		It("Should fail if data type is int", func() {
 			s := Struct()
-			Expect(s.Validate(100)).To(Equal(ErrAnyType))
+			Expect(Validate(100, s)).To(Equal(ErrAnyType))
 		})
 
 		It("Should fail if data type is bool", func() {
 			s := Struct()
-			Expect(s.Validate(true)).To(Equal(ErrAnyType))
+			Expect(Validate(true, s)).To(Equal(ErrAnyType))
 		})
 	})
 
@@ -87,7 +87,7 @@ var _ = Describe("Struct", func() {
 				),
 			})
 
-			Expect(s.Validate(data)).To(BeNil())
+			Expect(Validate(data, s)).To(BeNil())
 		})
 
 		It("Should fail if one schema mis-match", func() {
@@ -109,7 +109,7 @@ var _ = Describe("Struct", func() {
 				),
 			})
 
-			Expect(s.Validate(data)).To(Equal(ErrAnyType))
+			Expect(Validate(data, s)).To(Equal(ErrAnyType))
 		})
 	})
 })
