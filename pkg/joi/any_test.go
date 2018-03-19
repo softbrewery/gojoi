@@ -189,4 +189,11 @@ var _ = Describe("Any", func() {
 			Expect(Validate("id", s)).To(BeNil())
 		})
 	})
+
+	Describe("Validate", func() {
+
+		It("Should fail id no schema is set", func() {
+			Expect(Validate(123, nil)).To(Equal(ErrSchemaNil))
+		})
+	})
 })
