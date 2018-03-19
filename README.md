@@ -229,6 +229,38 @@ schema := joi.String().LowerCase()
 ```
 ---
 
+### `Int` - inherits from `Any`
+
+Generates a schema object that matches int data type.
+
+Supports the same methods of the any() type.
+
+```go
+schema := joi.Int()
+```
+
+#### `Int().Min(limit int)`
+
+Specifies the minimum number where:
+
+- `limit` - the minimum number required.
+
+```go
+schema := joi.Int().Min(2)
+```
+
+#### `Int().Max(limit int)`
+
+Specifies the maximum number where:
+
+- `limit` - the maximum number allowed.
+
+```go
+schema := joi.Int().Max(10)
+```
+
+---
+
 ### `Slice` - inherits from `Any`
 
 Generates a schema object that matches slice [] data type.
