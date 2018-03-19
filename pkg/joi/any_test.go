@@ -188,6 +188,28 @@ var _ = Describe("Any", func() {
 
 			Expect(Validate("id", s)).To(BeNil())
 		})
+
+		It("Should return custom err on PRE transform", func() {
+			myError := errors.New("myError")
+
+			f := func(value interface{}) (interface{}, error) {
+				return nil, myError
+			}
+
+			s := Any().Transform(TransformStagePRE, f)
+			Expect(Validate("id", s)).To(Equal(myError))
+		})
+
+		It("Should return custom err on POST transform", func() {
+			myError := errors.New("myError")
+
+			f := func(value interface{}) (interface{}, error) {
+				return nil, myError
+			}
+
+			s := Any().Transform(TransformStagePOST, f)
+			Expect(Validate("id", s)).To(Equal(myError))
+		})
 	})
 
 	Describe("Validate", func() {
