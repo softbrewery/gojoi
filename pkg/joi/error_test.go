@@ -16,4 +16,12 @@ var _ = Describe("Error", func() {
 			Expect(err).ToNot(BeNil())
 		})
 	})
+
+	Describe("Error", func() {
+
+		It("Should convert error to string", func() {
+			err := NewError("abc", "123")
+			Expect(err.Error()).To(Equal("abc: 123"))
+		})
+	})
 })
