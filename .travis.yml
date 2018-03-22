@@ -6,15 +6,15 @@ branches:
 
 matrix:
   include:
-    - go: 1.5
-    - go: 1.6
-    - go: 1.7
-    - go: 1.8
-    - go: 1.9
-    - go: 1.10
-    - go: tip
+    - go: "1.5"
+    - go: "1.6"
+    - go: "1.7"
+    - go: "1.8"
+    - go: "1.9"
+    - go: "1.10"
+    - go: "tip"
   allow_failures:
-    - go: tip
+    - go: "tip"
 
 install:
   - go get github.com/onsi/ginkgo/ginkgo
