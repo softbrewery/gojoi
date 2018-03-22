@@ -13,7 +13,7 @@ var (
 	ErrAnyDisallow  = NewError("interface", "Value is matching disallowed values")
 )
 
-// AnySchema ...
+// AnySchema defines the struct properties
 type AnySchema struct {
 	root Schema
 
@@ -27,54 +27,54 @@ type AnySchema struct {
 	transform map[TransformStage]TransformFunc
 }
 
-// NewAnySchema ...
+// NewAnySchema creates a new AnySchema object
 func NewAnySchema() *AnySchema {
 	s := &AnySchema{}
 	s.root = s
 	return s
 }
 
-// Kind ...
+// Kind gets the type of the schema
 func (s *AnySchema) Kind() string {
 	return reflect.Interface.String()
 }
 
-// Root ...
+// Root stores the root type for validation
 func (s *AnySchema) Root() Schema {
 	return s.root
 }
 
-// Description ...
+// Description stores a description
 func (s *AnySchema) Description(description string) *AnySchema {
 	s.description = &description
 	return s
 }
 
-// Required ...
+// Required marks a key as required which will not allow nil as value
 func (s *AnySchema) Required() *AnySchema {
 	s.required = BoolToPointer(true)
 	return s
 }
 
-// Forbidden ...
+// Forbidden marks a key as forbidden which will not allow any value except nil
 func (s *AnySchema) Forbidden() *AnySchema {
 	s.forbidden = BoolToPointer(true)
 	return s
 }
 
-// Allow ...
+// Allow whitelists a value
 func (s *AnySchema) Allow(values ...interface{}) *AnySchema {
 	s.allow = &values
 	return s
 }
 
-// Disallow ...
+// Disallow blacklists a value
 func (s *AnySchema) Disallow(values ...interface{}) *AnySchema {
 	s.disallow = &values
 	return s
 }
 
-// TransformStage ...
+// TransformStage defines the stages
 type TransformStage int
 
 // TransformStageEnums
@@ -83,10 +83,10 @@ const (
 	TransformStagePOST
 )
 
-// TransformFunc ...
+// TransformFunc function template
 type TransformFunc func(interface{}) (interface{}, error)
 
-// Transform ...
+// Transform allows to run custom tranformation functions
 func (s *AnySchema) Transform(stage TransformStage, f TransformFunc) *AnySchema {
 	if !IsSet(s.transform) {
 		s.transform = make(map[TransformStage]TransformFunc)
@@ -95,7 +95,7 @@ func (s *AnySchema) Transform(stage TransformStage, f TransformFunc) *AnySchema 
 	return s
 }
 
-// Validate ...
+// Validate runs validation for AnySchema
 func (s *AnySchema) Validate(value interface{}) error {
 	// Validate PRE Transform
 	if err := s.runTransform(TransformStagePRE, &value); err != nil {
