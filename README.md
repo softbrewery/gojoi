@@ -259,6 +259,22 @@ Specifies the maximum number where:
 schema := joi.Int().Max(10)
 ```
 
+#### `Int().Positive()`
+
+Requires the number to be positive.
+
+```go
+schema := joi.Int().Positive()
+```
+
+#### `Int().Negative()`
+
+Requires the number to be negative.
+
+```go
+schema := joi.Int().Negative()
+```
+
 ---
 
 ### `Slice` - inherits from `Any`

@@ -6,16 +6,20 @@ import (
 
 // StringSchema Error definitions
 var (
-	ErrIntMin = NewError("int", "Value is smaller")
-	ErrIntMax = NewError("int", "Value is bigger")
+	ErrIntMin      = NewError("int", "Value is smaller")
+	ErrIntMax      = NewError("int", "Value is bigger")
+	ErrIntPositive = NewError("int", "Value is not positive")
+	ErrIntNegative = NewError("int", "Value is not negative")
 )
 
 // IntSchema ...
 type IntSchema struct {
 	AnySchema
 
-	min *int64
-	max *int64
+	min      *int64
+	max      *int64
+	positive *bool
+	negative *bool
 }
 
 // NewIntSchema ...
@@ -42,6 +46,18 @@ func (s *IntSchema) Max(max int64) *IntSchema {
 	return s
 }
 
+// Positive ...
+func (s *IntSchema) Positive() *IntSchema {
+	s.positive = BoolToPointer(true)
+	return s
+}
+
+// Negative ...
+func (s *IntSchema) Negative() *IntSchema {
+	s.negative = BoolToPointer(true)
+	return s
+}
+
 // Validate ...
 func (s *IntSchema) Validate(value interface{}) error {
 	err := s.AnySchema.Validate(value)
@@ -64,6 +80,14 @@ func (s *IntSchema) Validate(value interface{}) error {
 	// Validate Max
 	if IsSet(s.max) && *s.max < cValue {
 		return ErrIntMax
+	}
+	// Validate Positive
+	if IsSet(s.positive) && *s.positive == true && cValue < 0 {
+		return ErrIntPositive
+	}
+	// Validate Negative
+	if IsSet(s.negative) && *s.negative == true && cValue > 0 {
+		return ErrIntNegative
 	}
 
 	return nil

@@ -94,4 +94,30 @@ var _ = Describe("Int", func() {
 			Expect(Validate(5, s)).To(Equal(ErrIntMax))
 		})
 	})
+
+	Describe("Positive", func() {
+
+		It("Error should be nil if value is positive", func() {
+			s := Int().Positive()
+			Expect(Validate(5, s)).To(BeNil())
+		})
+
+		It("Error should be not nil if value is negative", func() {
+			s := Int().Positive()
+			Expect(Validate(-5, s)).To(Equal(ErrIntPositive))
+		})
+	})
+
+	Describe("Negative", func() {
+
+		It("Error should be nil if value is negative", func() {
+			s := Int().Negative()
+			Expect(Validate(-5, s)).To(BeNil())
+		})
+
+		It("Error should be not nil if value is positive", func() {
+			s := Int().Negative()
+			Expect(Validate(5, s)).To(Equal(ErrIntNegative))
+		})
+	})
 })
