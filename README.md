@@ -70,7 +70,7 @@ err := joi.Validate(data, schema)
             * [String().CreditCard()](#stringcreditcard)
             * [String().Base64()](#stringbase64)
             * [String().Hex()](#stringhex)
-            * [String().Email(options EmailOptions)](#stringemailoptions-emailoptions)
+            * [String().Email(options *EmailOptions)](#stringemailoptions-emailoptions)
          * [Int - inherits from <code>Any</code>](#int---inherits-from-any)
             * [Int().Min(limit int)](#intminlimit-int)
             * [Int().Max(limit int)](#intmaxlimit-int)
@@ -88,7 +88,7 @@ err := joi.Validate(data, schema)
          * [Struct - inherits from <code>Any</code>](#struct---inherits-from-any)
             * [Struct().Keys(keys StructKeys{...})](#structkeyskeys-structkeys)
 
-<!-- Added by: steven, at: 2018-03-27T18:40+02:00 -->
+<!-- Added by: steven, at: 2018-03-27T19:14+02:00 -->
 
 <!--te-->
 
@@ -322,11 +322,11 @@ Requires the string value to be a valid hexadecimal string.
 schema := joi.String().Hex()
 ```
 
-#### `String().Email(options EmailOptions)`
+#### `String().Email(options *EmailOptions)`
 
 Requires the string value to be a valid email address.
 
-- `options` - optional settings:
+- `options` - optional settings, options is of type `*EmailOptions`
     - `SMTPLookup` - Defines if SMTP lookup need to be executed (defaults to false)
 
 Example without options
