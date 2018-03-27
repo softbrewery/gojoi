@@ -10,6 +10,9 @@ var (
 	ErrIntMax      = NewError("int", "Value is bigger")
 	ErrIntPositive = NewError("int", "Value is not positive")
 	ErrIntNegative = NewError("int", "Value is not negative")
+	ErrIntGreater  = NewError("int", "Value is not greater")
+	ErrIntLess     = NewError("int", "Value is not less")
+	ErrIntMultiple = NewError("int", "Value is not matching multiple")
 )
 
 // IntSchema ...
@@ -20,6 +23,9 @@ type IntSchema struct {
 	max      *int64
 	positive *bool
 	negative *bool
+	greater  *int64
+	less     *int64
+	multiple *int64
 }
 
 // NewIntSchema ...
@@ -58,6 +64,24 @@ func (s *IntSchema) Negative() *IntSchema {
 	return s
 }
 
+// Greater ...
+func (s *IntSchema) Greater(limit int64) *IntSchema {
+	s.greater = &limit
+	return s
+}
+
+// Less ...
+func (s *IntSchema) Less(limit int64) *IntSchema {
+	s.less = &limit
+	return s
+}
+
+// Multiple ...
+func (s *IntSchema) Multiple(base int64) *IntSchema {
+	s.multiple = &base
+	return s
+}
+
 // Validate ...
 func (s *IntSchema) Validate(value interface{}) error {
 	err := s.AnySchema.Validate(value)
@@ -89,6 +113,19 @@ func (s *IntSchema) Validate(value interface{}) error {
 	if IsSet(s.negative) && *s.negative == true && cValue > 0 {
 		return ErrIntNegative
 	}
+	// Validate Greater
+	if IsSet(s.greater) && *s.greater >= cValue {
+		return ErrIntGreater
+	}
+	// Validate Less
+	if IsSet(s.less) && *s.less <= cValue {
+		return ErrIntLess
+	}
+	// Validate Multiple
+	if IsSet(s.multiple) && cValue%(*s.multiple) != 0 {
+		return ErrIntMultiple
+	}
 
+	// All OK
 	return nil
 }

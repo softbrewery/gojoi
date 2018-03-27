@@ -76,6 +76,9 @@ err := joi.Validate(data, schema)
             * [Int().Max(limit int)](#intmaxlimit-int)
             * [Int().Positive()](#intpositive)
             * [Int().Negative()](#intnegative)
+            * [Int().Greater(limit int)](#intgreaterlimit-int)
+            * [Int().Less(limit int)](#intlesslimit-int)
+            * [Int().Multiple(base int)](#intmultiplebase-int)
          * [Bool - inherits from <code>Any</code>](#bool---inherits-from-any)
          * [Slice - inherits from <code>Any</code>](#slice---inherits-from-any)
             * [Slice().Items(schema Schema)](#sliceitemsschema-schema)
@@ -85,7 +88,7 @@ err := joi.Validate(data, schema)
          * [Struct - inherits from <code>Any</code>](#struct---inherits-from-any)
             * [Struct().Keys(keys StructKeys{...})](#structkeyskeys-structkeys)
 
-<!-- Added by: steven, at: 2018-03-27T15:42+02:00 -->
+<!-- Added by: steven, at: 2018-03-27T18:40+02:00 -->
 
 <!--te-->
 
@@ -375,6 +378,38 @@ Requires the number to be negative.
 ```go
 schema := joi.Int().Negative()
 ```
+
+#### `Int().Greater(limit int)`
+
+Specifies that the value must be greater than limit.
+
+- `limit` - the lower limit
+
+```go
+schema := joi.Int().Greater(10)
+```
+
+#### `Int().Less(limit int)`
+
+Specifies that the value must be less than limit.
+
+- `limit` - the upper limit
+
+```go
+schema := joi.Int().Less(10)
+```
+
+#### `Int().Multiple(base int)`
+
+Specifies that the value must be a multiple of `base`:
+
+- `base` - the base to multiply 
+
+```go
+schema := joi.Int().Multiple(3)
+```
+
+Notes: uses the modulo operator (%) to determine if a number is multiple of another number
 
 ---
 

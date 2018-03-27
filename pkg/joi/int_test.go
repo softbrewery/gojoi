@@ -120,4 +120,58 @@ var _ = Describe("Int", func() {
 			Expect(Validate(5, s)).To(Equal(ErrIntNegative))
 		})
 	})
+
+	Describe("Greater", func() {
+
+		It("Error should be nil if value is grater than", func() {
+			s := Int().Greater(5)
+			Expect(Validate(6, s)).To(BeNil())
+		})
+
+		It("Error should be not nil if value is equal", func() {
+			s := Int().Greater(5)
+			Expect(Validate(5, s)).To(Equal(ErrIntGreater))
+		})
+
+		It("Error should be not nil if value is less than", func() {
+			s := Int().Greater(5)
+			Expect(Validate(4, s)).To(Equal(ErrIntGreater))
+		})
+	})
+
+	Describe("Less", func() {
+
+		It("Error should be nil if value is less than", func() {
+			s := Int().Less(5)
+			Expect(Validate(4, s)).To(BeNil())
+		})
+
+		It("Error should be not nil if value is equal", func() {
+			s := Int().Less(5)
+			Expect(Validate(5, s)).To(Equal(ErrIntLess))
+		})
+
+		It("Error should be not nil if value is grater than", func() {
+			s := Int().Less(5)
+			Expect(Validate(6, s)).To(Equal(ErrIntLess))
+		})
+	})
+
+	Describe("Multiple", func() {
+
+		It("Error should be nil if value is multiple of base", func() {
+			s := Int().Multiple(5)
+			Expect(Validate(5, s)).To(BeNil())
+			Expect(Validate(10, s)).To(BeNil())
+			Expect(Validate(15, s)).To(BeNil())
+			Expect(Validate(20, s)).To(BeNil())
+		})
+
+		It("Error should be not nil if value is not multiple of base", func() {
+			s := Int().Multiple(5)
+			Expect(Validate(4, s)).To(Equal(ErrIntMultiple))
+			Expect(Validate(11, s)).To(Equal(ErrIntMultiple))
+			Expect(Validate(19, s)).To(Equal(ErrIntMultiple))
+		})
+	})
 })
