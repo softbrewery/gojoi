@@ -241,16 +241,47 @@ var _ = Describe("String", func() {
 			"$#%#$^$^)(*&^%",
 		}
 
-		It("Error should be not nil if card is invalid", func() {
+		It("Error should be not nil if base64 is invalid", func() {
 			s := String().Base64()
 			for _, b64 := range inValidBase64 {
 				Expect(Validate(b64, s)).To(Equal(ErrStringBase64))
 			}
 		})
 
-		It("Error should be not nil if card is empty", func() {
+		It("Error should be not nil if base64 is empty", func() {
 			s := String().Base64()
 			Expect(Validate("", s)).To(Equal(ErrStringBase64))
+		})
+	})
+
+	Describe("Hex", func() {
+
+		validHex := []string{
+			"12345678ABCD",
+			"12345678AbCd",
+		}
+
+		It("Error should be nil if hex is valid", func() {
+			s := String().Hex()
+			for _, hex := range validHex {
+				Expect(Validate(hex, s)).To(BeNil())
+			}
+		})
+
+		inValidHex := []string{
+			"123afg",
+		}
+
+		It("Error should be not nil if hex is invalid", func() {
+			s := String().Hex()
+			for _, hex := range inValidHex {
+				Expect(Validate(hex, s)).To(Equal(ErrStringHex))
+			}
+		})
+
+		It("Error should be not nil if hex is empty", func() {
+			s := String().Hex()
+			Expect(Validate("", s)).To(Equal(ErrStringHex))
 		})
 	})
 })

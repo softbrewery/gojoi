@@ -2,6 +2,7 @@ package joi
 
 import (
 	"encoding/base64"
+	"encoding/hex"
 	"reflect"
 	"regexp"
 	"strings"
@@ -18,6 +19,7 @@ var (
 	ErrStringRegexCompile = NewError("string", "Could not compile regex")
 	ErrStringCreditCard   = NewError("string", "Value is not matching creditcard")
 	ErrStringBase64       = NewError("string", "Value is not matching base64")
+	ErrStringHex          = NewError("string", "Value is not matching hex")
 )
 
 // StringSchema ...
@@ -32,6 +34,7 @@ type StringSchema struct {
 	regex      *string
 	creditcard *bool
 	base64     *bool
+	hex        *bool
 }
 
 // NewStringSchema ...
@@ -94,6 +97,12 @@ func (s *StringSchema) Base64() *StringSchema {
 	return s
 }
 
+// Hex ...
+func (s *StringSchema) Hex() *StringSchema {
+	s.hex = BoolToPointer(true)
+	return s
+}
+
 // Validate ...
 func (s *StringSchema) Validate(value interface{}) error {
 	err := s.AnySchema.Validate(value)
@@ -147,6 +156,11 @@ func (s *StringSchema) Validate(value interface{}) error {
 	if IsSet(s.base64) && *s.base64 == true && !validateBase64(cValue) {
 		return ErrStringBase64
 	}
+	// Validate Hex
+	if IsSet(s.hex) && *s.hex == true && !validateHex(cValue) {
+
+		return ErrStringHex
+	}
 
 	// All OK
 	return nil
@@ -181,6 +195,18 @@ func validateBase64(data string) bool {
 	}
 
 	_, err := base64.StdEncoding.DecodeString(data)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+func validateHex(data string) bool {
+	if data == "" {
+		return false
+	}
+
+	_, err := hex.DecodeString(data)
 	if err != nil {
 		return false
 	}

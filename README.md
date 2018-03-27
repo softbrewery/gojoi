@@ -69,6 +69,7 @@ err := joi.Validate(data, schema)
             * [String().Regex(expression string)](#stringregexexpression-string)
             * [String().CreditCard()](#stringcreditcard)
             * [String().Base64()](#stringbase64)
+            * [String().Hex()](#stringhex)
          * [Int - inherits from <code>Any</code>](#int---inherits-from-any)
             * [Int().Min(limit int)](#intminlimit-int)
             * [Int().Max(limit int)](#intmaxlimit-int)
@@ -83,7 +84,7 @@ err := joi.Validate(data, schema)
          * [Struct - inherits from <code>Any</code>](#struct---inherits-from-any)
             * [Struct().Keys(keys StructKeys{...})](#structkeyskeys-structkeys)
 
-<!-- Added by: steven, at: 2018-03-27T12:01+02:00 -->
+<!-- Added by: steven, at: 2018-03-27T13:02+02:00 -->
 
 <!--te-->
 
@@ -297,6 +298,14 @@ Requires the string value to be a valid base64 string; does not check the decode
 
 ```go
 schema := joi.String().Base64()
+```
+
+#### `String().Hex()`
+
+Requires the string value to be a valid hexadecimal string.
+
+```go
+schema := joi.String().Hex()
 ```
 
 ---
