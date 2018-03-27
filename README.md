@@ -109,12 +109,22 @@ schema := joi.Any()
 Gets the type of the schema
 
 ```go
-schema := joi.Any()
-kind := schema.Kind() // kind == "interface"
+kind := joi.Any().Kind() // kind == "interface"
 ```
 ```go
-schema := joi.String()
-kind := schema.Kind() // kind == "string"
+kind := joi.String().Kind() // kind == "string"
+```
+```go
+kind := joi.Int().Kind() // kind == "int"
+```
+```go
+kind := joi.Bool().Kind() // kind == "bool"
+```
+```go
+kind := joi.Slice().Kind() // kind == "slice"
+```
+```go
+kind := joi.Struct().Kind() // kind == "struct"
 ```
 
 #### `Any().Allow(values ...interface{})`
