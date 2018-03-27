@@ -214,4 +214,43 @@ var _ = Describe("String", func() {
 			Expect(Validate("", s)).To(Equal(ErrStringCreditCard))
 		})
 	})
+
+	Describe("Base64", func() {
+
+		validBase64 := []string{
+			"YW55IGNhcm5hbCBwbGVhc3VyZS4=",
+			"YW==",
+			"YW5=",
+		}
+
+		It("Error should be nil if base64 is valid", func() {
+			s := String().Base64()
+			for _, b64 := range validBase64 {
+				Expect(Validate(b64, s)).To(BeNil())
+			}
+		})
+
+		inValidBase64 := []string{
+			"=YW55IGNhcm5hbCBwbGVhc3VyZS4",
+			"YW55IGNhcm5hbCBwbGVhc3VyZS4==",
+			"YW55IGNhcm5hbCBwbGVhc3VyZS4",
+			"Y=",
+			"Y===",
+			"YW",
+			"YW5",
+			"$#%#$^$^)(*&^%",
+		}
+
+		It("Error should be not nil if card is invalid", func() {
+			s := String().Base64()
+			for _, b64 := range inValidBase64 {
+				Expect(Validate(b64, s)).To(Equal(ErrStringBase64))
+			}
+		})
+
+		It("Error should be not nil if card is empty", func() {
+			s := String().Base64()
+			Expect(Validate("", s)).To(Equal(ErrStringBase64))
+		})
+	})
 })

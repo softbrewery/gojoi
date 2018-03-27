@@ -290,6 +290,14 @@ Requires the number to be a credit card number Using [Luhn Algorithm](http://en.
 schema := joi.String().CreditCard()
 ```
 
+#### `String().Base64()`
+
+Requires the string value to be a valid base64 string; does not check the decoded value.
+
+```go
+schema := joi.String().Base64()
+```
+
 ---
 
 ### `Int` - inherits from `Any`
