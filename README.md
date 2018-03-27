@@ -70,6 +70,7 @@ err := joi.Validate(data, schema)
             * [String().CreditCard()](#stringcreditcard)
             * [String().Base64()](#stringbase64)
             * [String().Hex()](#stringhex)
+            * [String().Email(options EmailOptions)](#stringemailoptions-emailoptions)
          * [Int - inherits from <code>Any</code>](#int---inherits-from-any)
             * [Int().Min(limit int)](#intminlimit-int)
             * [Int().Max(limit int)](#intmaxlimit-int)
@@ -84,7 +85,7 @@ err := joi.Validate(data, schema)
          * [Struct - inherits from <code>Any</code>](#struct---inherits-from-any)
             * [Struct().Keys(keys StructKeys{...})](#structkeyskeys-structkeys)
 
-<!-- Added by: steven, at: 2018-03-27T13:02+02:00 -->
+<!-- Added by: steven, at: 2018-03-27T15:42+02:00 -->
 
 <!--te-->
 
