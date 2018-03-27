@@ -140,13 +140,13 @@ func (s *StringSchema) Validate(value interface{}) error {
 }
 
 func validateLuhn(card string) bool {
-	/* Validate string with Luhn (mod-10) */
-	var alter bool
-	var checksum int
-
 	if card == "" {
 		return false
 	}
+
+	/* Validate string with Luhn (mod-10) */
+	var alter bool
+	var checksum int
 
 	for position := len(card) - 1; position > -1; position-- {
 		digit := int(card[position] - 48)
