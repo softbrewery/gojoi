@@ -284,4 +284,64 @@ var _ = Describe("String", func() {
 			Expect(Validate("", s)).To(Equal(ErrStringHex))
 		})
 	})
+
+	Describe("Email", func() {
+
+		It("Error should be nil if email is valid", func() {
+			validEmail := []string{
+				"joe@example.com",
+			}
+
+			s := String().Email(nil)
+			for _, hex := range validEmail {
+				Expect(Validate(hex, s)).To(BeNil())
+			}
+		})
+
+		It("Error should be nil if email is valid with lookup", func() {
+			validEmail := []string{
+				"ceuppens.steven@gmail.com",
+			}
+
+			s := String().Email(&EmailOptions{SMTPLookup: true})
+			for _, hex := range validEmail {
+				Expect(Validate(hex, s)).To(BeNil())
+			}
+		})
+
+		It("Error should be not nil if email is invalid", func() {
+			inValidEmail := []string{
+				"@icloud.com",
+				"walmartlabs.com",
+				".com",
+				"joe@domain@domain.com",
+			}
+
+			s := String().Email(nil)
+			for _, hex := range inValidEmail {
+				Expect(Validate(hex, s)).To(Equal(ErrStringEmail))
+			}
+		})
+
+		It("Error should be not nil if email is invalid with lookup", func() {
+			inValidEmail := []string{
+				"@icloud.com",
+				"walmartlabs.com",
+				".com",
+				"joe@domain@domain.com",
+				"test@912-wrong-domain902.com",               // non-existing domain
+				"0932910-qsdcqozuioqkdmqpeidj8793@gmail.com", // non-existing email
+			}
+
+			s := String().Email(&EmailOptions{SMTPLookup: true})
+			for _, hex := range inValidEmail {
+				Expect(Validate(hex, s)).To(Equal(ErrStringEmail))
+			}
+		})
+
+		It("Error should be not nil if email is empty", func() {
+			s := String().Email(nil)
+			Expect(Validate("", s)).To(Equal(ErrStringEmail))
+		})
+	})
 })

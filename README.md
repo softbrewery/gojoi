@@ -308,6 +308,25 @@ Requires the string value to be a valid hexadecimal string.
 schema := joi.String().Hex()
 ```
 
+#### `String().Email(options EmailOptions)`
+
+Requires the string value to be a valid email address.
+
+- `options` - optional settings:
+    - `SMTPLookup` - Defines if SMTP lookup need to be executed (defaults to false)
+
+Example without options
+```go
+schema := joi.String().Email(nil)
+```
+
+Example with options
+```go
+schema := joi.String().Email(&EmailOptions{
+    SMTPLookup: true,
+})
+```
+
 ---
 
 ### `Int` - inherits from `Any`

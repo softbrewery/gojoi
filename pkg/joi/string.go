@@ -6,6 +6,8 @@ import (
 	"reflect"
 	"regexp"
 	"strings"
+
+	"github.com/badoux/checkmail"
 )
 
 // StringSchema Error definitions
@@ -20,21 +22,24 @@ var (
 	ErrStringCreditCard   = NewError("string", "Value is not matching creditcard")
 	ErrStringBase64       = NewError("string", "Value is not matching base64")
 	ErrStringHex          = NewError("string", "Value is not matching hex")
+	ErrStringEmail        = NewError("string", "Value is not matching email")
 )
 
 // StringSchema ...
 type StringSchema struct {
 	AnySchema
 
-	min        *int
-	max        *int
-	length     *int
-	uppercase  *bool
-	lowercase  *bool
-	regex      *string
-	creditcard *bool
-	base64     *bool
-	hex        *bool
+	min          *int
+	max          *int
+	length       *int
+	uppercase    *bool
+	lowercase    *bool
+	regex        *string
+	creditcard   *bool
+	base64       *bool
+	hex          *bool
+	email        *bool
+	emailOptions *EmailOptions
 }
 
 // NewStringSchema ...
@@ -103,6 +108,21 @@ func (s *StringSchema) Hex() *StringSchema {
 	return s
 }
 
+// EmailOptions ...
+type EmailOptions struct {
+	SMTPLookup bool
+}
+
+// Email ...
+func (s *StringSchema) Email(options *EmailOptions) *StringSchema {
+	if options == nil {
+		options = &EmailOptions{}
+	}
+	s.email = BoolToPointer(true)
+	s.emailOptions = options
+	return s
+}
+
 // Validate ...
 func (s *StringSchema) Validate(value interface{}) error {
 	err := s.AnySchema.Validate(value)
@@ -158,8 +178,11 @@ func (s *StringSchema) Validate(value interface{}) error {
 	}
 	// Validate Hex
 	if IsSet(s.hex) && *s.hex == true && !validateHex(cValue) {
-
 		return ErrStringHex
+	}
+	// Validate Email
+	if IsSet(s.email) && *s.email == true && !validateEmail(cValue, s.emailOptions) {
+		return ErrStringEmail
 	}
 
 	// All OK
@@ -209,6 +232,22 @@ func validateHex(data string) bool {
 	_, err := hex.DecodeString(data)
 	if err != nil {
 		return false
+	}
+	return true
+}
+
+func validateEmail(data string, options *EmailOptions) bool {
+	if data == "" {
+		return false
+	}
+
+	if err := checkmail.ValidateFormat(data); err != nil {
+		return false
+	}
+	if options.SMTPLookup {
+		if err := checkmail.ValidateHost(data); err != nil {
+			return false
+		}
 	}
 	return true
 }
