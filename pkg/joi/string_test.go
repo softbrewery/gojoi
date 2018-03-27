@@ -148,4 +148,22 @@ var _ = Describe("String", func() {
 			Expect(Validate("HelloWorld", s)).To(Equal(ErrStringLowerCase))
 		})
 	})
+
+	Describe("Regex", func() {
+
+		It("Error should be nil if regex is empty", func() {
+			s := String().Regex("")
+			Expect(Validate("hello", s)).To(BeNil())
+		})
+
+		It("Error should be nil if regex is matching", func() {
+			s := String().Regex(`[a-z]{5}\s[A-Z]{5}\s\d{4}!`)
+			Expect(Validate("hello WORLD 1235!", s)).To(BeNil())
+		})
+
+		It("Error should be not nil if regex is not matching", func() {
+			s := String().Regex(`[a-z]{5}\s[A-Z]{5}\s\d{4}!`)
+			Expect(Validate("HELLO world 123?", s)).To(Equal(ErrStringRegex))
+		})
+	})
 })

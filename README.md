@@ -66,6 +66,7 @@ err := joi.Validate(data, schema)
             * [String().Length(limit int)](#stringlengthlimit-int)
             * [String().UpperCase()](#stringuppercase)
             * [String().LowerCase()](#stringlowercase)
+            * [String().Regex(pattern)](#stringregexpattern)
          * [Int - inherits from <code>Any</code>](#int---inherits-from-any)
             * [Int().Min(limit int)](#intminlimit-int)
             * [Int().Max(limit int)](#intmaxlimit-int)
@@ -80,7 +81,7 @@ err := joi.Validate(data, schema)
          * [Struct - inherits from <code>Any</code>](#struct---inherits-from-any)
             * [Struct().Keys(keys StructKeys{...})](#structkeyskeys-structkeys)
 
-<!-- Added by: steven, at: 2018-03-27T10:51+02:00 -->
+<!-- Added by: steven, at: 2018-03-27T11:17+02:00 -->
 
 <!--te-->
 
@@ -253,7 +254,6 @@ Specifies the exact string length required where:
 ```go
 schema := joi.String().Length(5)
 ```
----
 
 #### `String().UpperCase()`
 
@@ -262,7 +262,6 @@ Requires the string value to be all uppercase.
 ```go
 schema := joi.String().UpperCase()
 ```
----
 
 #### `String().LowerCase()`
 
@@ -270,6 +269,16 @@ Requires the string value to be all lowercase.
 
 ```go
 schema := joi.String().LowerCase()
+```
+
+#### `String().Regex(pattern)`
+
+Defines a regular expression rule where:
+
+- `pattern` - a regular expression object the string value must match against.
+
+```go
+schema := joi.String().Regex("^[abc]+$")
 ```
 ---
 

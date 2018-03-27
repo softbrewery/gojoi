@@ -2,16 +2,19 @@ package joi
 
 import (
 	"reflect"
+	"regexp"
 	"strings"
 )
 
 // StringSchema Error definitions
 var (
-	ErrStringMin       = NewError("string", "Value is smaller")
-	ErrStringMax       = NewError("string", "Value is bigger")
-	ErrStringLength    = NewError("string", "Value is out of length")
-	ErrStringUpperCase = NewError("string", "Value is not uppercase")
-	ErrStringLowerCase = NewError("string", "Value is not lowercase")
+	ErrStringMin          = NewError("string", "Value is smaller")
+	ErrStringMax          = NewError("string", "Value is bigger")
+	ErrStringLength       = NewError("string", "Value is out of length")
+	ErrStringUpperCase    = NewError("string", "Value is not uppercase")
+	ErrStringLowerCase    = NewError("string", "Value is not lowercase")
+	ErrStringRegex        = NewError("string", "Value is not matching regex")
+	ErrStringRegexCompile = NewError("string", "Could not compile regex")
 )
 
 // StringSchema ...
@@ -23,6 +26,7 @@ type StringSchema struct {
 	length    *int
 	uppercase *bool
 	lowercase *bool
+	regex     *string
 }
 
 // NewStringSchema ...
@@ -67,6 +71,12 @@ func (s *StringSchema) LowerCase() *StringSchema {
 	return s
 }
 
+// Regex ...
+func (s *StringSchema) Regex(regex string) *StringSchema {
+	s.regex = &regex
+	return s
+}
+
 // Validate ...
 func (s *StringSchema) Validate(value interface{}) error {
 	err := s.AnySchema.Validate(value)
@@ -102,6 +112,17 @@ func (s *StringSchema) Validate(value interface{}) error {
 	if IsSet(s.lowercase) && *s.lowercase == true && strings.ToLower(cValue) != cValue {
 		return ErrStringLowerCase
 	}
+	// Validate Regex
+	if IsSet(s.regex) {
+		r, err := regexp.Compile(*s.regex)
+		if err != nil {
+			return ErrStringRegexCompile
+		}
+		if !r.MatchString(cValue) {
+			return ErrStringRegex
+		}
+	}
 
+	// All OK
 	return nil
 }
