@@ -165,6 +165,11 @@ var _ = Describe("String", func() {
 			s := String().Regex(`[a-z]{5}\s[A-Z]{5}\s\d{4}!`)
 			Expect(Validate("HELLO world 123?", s)).To(Equal(ErrStringRegex))
 		})
+
+		It("Error should be not nil if regex is not able to compile", func() {
+			s := String().Regex("^.*(?=.{7,})") // Perl syntax
+			Expect(Validate("HELLO world 123?", s)).To(Equal(ErrStringRegexCompile))
+		})
 	})
 
 	Describe("CreditCard", func() {
