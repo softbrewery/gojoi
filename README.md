@@ -42,6 +42,50 @@ err := joi.Validate(data, schema)
 // err == nil
 ```
 
+---
+
+## Table of Contents - API
+
+<!--ts-->
+   * [gojoi](#gojoi)
+      * [Install](#install)
+      * [Usage](#usage)
+      * [Table of Contents - API](#table-of-contents---api)
+      * [Api](#api)
+         * [Any](#any)
+            * [Any().Kind()](#anykind)
+            * [Any().Allow(values ...interface{})](#anyallowvalues-interface)
+            * [Any().Disallow(values ...interface{})](#anydisallowvalues-interface)
+            * [Any().Required()](#anyrequired)
+            * [Any().Forbidden()](#anyforbidden)
+            * [Any().Description(desc string)](#anydescriptiondesc-string)
+            * [Any().Transform(stage TransformStage, fn TransformFunc)](#anytransformstage-transformstage-fn-transformfunc)
+         * [String - inherits from <code>Any</code>](#string---inherits-from-any)
+            * [String().Min(limit int)](#stringminlimit-int)
+            * [String().Max(limit int)](#stringmaxlimit-int)
+            * [String().Length(limit int)](#stringlengthlimit-int)
+            * [String().UpperCase()](#stringuppercase)
+            * [String().LowerCase()](#stringlowercase)
+         * [Int - inherits from <code>Any</code>](#int---inherits-from-any)
+            * [Int().Min(limit int)](#intminlimit-int)
+            * [Int().Max(limit int)](#intmaxlimit-int)
+            * [Int().Positive()](#intpositive)
+            * [Int().Negative()](#intnegative)
+         * [Bool - inherits from <code>Any</code>](#bool---inherits-from-any)
+         * [Slice - inherits from <code>Any</code>](#slice---inherits-from-any)
+            * [Slice().Items(schema Schema)](#sliceitemsschema-schema)
+            * [Slice().Min(limit int)](#sliceminlimit-int)
+            * [Slice().Max(limit int)](#slicemaxlimit-int)
+            * [Slice().Length(limit int)](#slicelengthlimit-int)
+         * [Struct - inherits from <code>Any</code>](#struct---inherits-from-any)
+            * [Struct().Keys(keys StructKeys{...})](#structkeyskeys-structkeys)
+
+<!-- Added by: steven, at: 2018-03-27T10:51+02:00 -->
+
+<!--te-->
+
+---
+
 ## Api
 
 ### `Any`
@@ -277,6 +321,18 @@ schema := joi.Int().Negative()
 
 ---
 
+### `Bool` - inherits from `Any`
+
+Generates a schema object that matches bool data type.
+
+Supports the same methods of the any() type.
+
+```go
+schema := joi.Bool()
+```
+
+---
+
 ### `Slice` - inherits from `Any`
 
 Generates a schema object that matches slice [] data type.
@@ -328,14 +384,45 @@ Specifies the exact number of items in the slice where:
 ```go
 schema := joi.Slice().Length(5)
 ```
+
 ---
 
-### `Bool` - inherits from `Any`
+### `Struct` - inherits from `Any`
 
-Generates a schema object that matches bool data type.
+Generates a schema object that matches struct data type.
 
 Supports the same methods of the any() type.
 
 ```go
-schema := joi.Bool()
+schema := joi.Struct()
+```
+
+#### `Struct().Keys(keys StructKeys{...})`
+
+Sets the allowed object keys where:
+
+- `keys` - object where each key is assigned a joi type object. keys is of `StructKeys`
+
+
+StructKeys is of type: `map[string]Schema`
+
+Basic example:
+```go
+schema := joi.Struct().Keys(StructKeys{
+    "Name": joi.String(),
+})
+```
+
+Advanced example:
+```go
+schema := joi.Struct().Keys(StructKeys{
+    "ID": joi.Forbidden(),
+    "Name": joi.String().Required(),
+    "Tags": joi.Slice().Items(
+        joi.String().UpperCase().Length(4),
+    ).Max(10),
+    "Meta": joi.Struct(StructKeys{
+        "Active": joi.Bool(),
+    }),
+})
 ```
