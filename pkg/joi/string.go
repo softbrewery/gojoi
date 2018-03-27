@@ -15,18 +15,20 @@ var (
 	ErrStringLowerCase    = NewError("string", "Value is not lowercase")
 	ErrStringRegex        = NewError("string", "Value is not matching regex")
 	ErrStringRegexCompile = NewError("string", "Could not compile regex")
+	ErrStringCreditCard   = NewError("string", "Value is not matching creditcard")
 )
 
 // StringSchema ...
 type StringSchema struct {
 	AnySchema
 
-	min       *int
-	max       *int
-	length    *int
-	uppercase *bool
-	lowercase *bool
-	regex     *string
+	min        *int
+	max        *int
+	length     *int
+	uppercase  *bool
+	lowercase  *bool
+	regex      *string
+	creditcard *bool
 }
 
 // NewStringSchema ...
@@ -77,6 +79,12 @@ func (s *StringSchema) Regex(regex string) *StringSchema {
 	return s
 }
 
+// CreditCard ...
+func (s *StringSchema) CreditCard() *StringSchema {
+	s.creditcard = BoolToPointer(true)
+	return s
+}
+
 // Validate ...
 func (s *StringSchema) Validate(value interface{}) error {
 	err := s.AnySchema.Validate(value)
@@ -122,7 +130,34 @@ func (s *StringSchema) Validate(value interface{}) error {
 			return ErrStringRegex
 		}
 	}
+	// Validate CreditCard
+	if IsSet(s.creditcard) && *s.creditcard == true && !validateLuhn(cValue) {
+		return ErrStringCreditCard
+	}
 
 	// All OK
 	return nil
+}
+
+func validateLuhn(card string) bool {
+	/* Validate string with Luhn (mod-10) */
+	var alter bool
+	var checksum int
+
+	if card == "" {
+		return false
+	}
+
+	for position := len(card) - 1; position > -1; position-- {
+		digit := int(card[position] - 48)
+		if alter {
+			digit = digit * 2
+			if digit > 9 {
+				digit = (digit % 10) + 1
+			}
+		}
+		alter = !alter
+		checksum += digit
+	}
+	return checksum%10 == 0
 }

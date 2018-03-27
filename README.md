@@ -67,6 +67,7 @@ err := joi.Validate(data, schema)
             * [String().UpperCase()](#stringuppercase)
             * [String().LowerCase()](#stringlowercase)
             * [String().Regex(expression string)](#stringregexexpression-string)
+            * [String().CreditCard()](#stringcreditcard)
          * [Int - inherits from <code>Any</code>](#int---inherits-from-any)
             * [Int().Min(limit int)](#intminlimit-int)
             * [Int().Max(limit int)](#intmaxlimit-int)
@@ -81,7 +82,7 @@ err := joi.Validate(data, schema)
          * [Struct - inherits from <code>Any</code>](#struct---inherits-from-any)
             * [Struct().Keys(keys StructKeys{...})](#structkeyskeys-structkeys)
 
-<!-- Added by: steven, at: 2018-03-27T11:20+02:00 -->
+<!-- Added by: steven, at: 2018-03-27T11:26+02:00 -->
 
 <!--te-->
 
@@ -280,6 +281,15 @@ Defines a regular expression rule where:
 ```go
 schema := joi.String().Regex("^[abc]+$")
 ```
+
+#### `String().CreditCard()`
+
+Requires the number to be a credit card number Using [Luhn Algorithm](http://en.wikipedia.org/wiki/Luhn_algorithm).
+
+```go
+schema := joi.String().CreditCard()
+```
+
 ---
 
 ### `Int` - inherits from `Any`

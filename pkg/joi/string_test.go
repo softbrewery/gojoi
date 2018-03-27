@@ -166,4 +166,47 @@ var _ = Describe("String", func() {
 			Expect(Validate("HELLO world 123?", s)).To(Equal(ErrStringRegex))
 		})
 	})
+
+	Describe("CreditCard", func() {
+
+		validCards := []string{
+			"378734493671000",
+			"371449635398431",
+			"378282246310005",
+			"341111111111111",
+			"5610591081018250",
+			"5019717010103742",
+			"38520000023237",
+			"30569309025904",
+			"6011000990139424",
+			"6011111111111117",
+			"6011601160116611",
+			"3566002020360505",
+			"3530111333300000",
+			"5105105105105100",
+			"5555555555554444",
+			"5431111111111111",
+			"6331101999990016",
+			"4222222222222",
+			"4012888888881881",
+			"4111111111111111",
+		}
+
+		It("Error should be nil if card is valid", func() {
+			s := String().CreditCard()
+			for _, card := range validCards {
+				Expect(Validate(card, s)).To(BeNil())
+			}
+		})
+
+		It("Error should be not nil if card is invalid", func() {
+			s := String().CreditCard()
+			Expect(Validate("4111111111111112", s)).To(Equal(ErrStringCreditCard))
+		})
+
+		It("Error should be not nil if card is empty", func() {
+			s := String().CreditCard()
+			Expect(Validate("", s)).To(Equal(ErrStringCreditCard))
+		})
+	})
 })
