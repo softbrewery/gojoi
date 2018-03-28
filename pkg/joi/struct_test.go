@@ -28,6 +28,18 @@ var _ = Describe("Struct", func() {
 			Expect(Validate(data, s)).To(BeNil())
 		})
 
+		It("Should pass if data type is *struct", func() {
+			data := struct {
+				Name string
+			}{
+				Name: "hello",
+			}
+
+			s := Struct()
+
+			Expect(Validate(&data, s)).To(BeNil())
+		})
+
 		It("Should fail if Any property fails", func() {
 			s := Struct().Required()
 
@@ -90,6 +102,51 @@ var _ = Describe("Struct", func() {
 			Expect(Validate(data, s)).To(BeNil())
 		})
 
+		It("Should pass if all schemas match *", func() {
+			data := struct {
+				Name   string
+				Active bool
+				List   []string
+			}{
+				Name:   "hello",
+				Active: true,
+				List:   []string{"hello", "world"},
+			}
+
+			s := Struct().Keys(StructKeys{
+				"Name":   String(),
+				"Active": Bool(),
+				"List": Slice().Items(
+					String(),
+				),
+			})
+
+			Expect(Validate(&data, s)).To(BeNil())
+		})
+
+		It("Should pass if all schemas match (including pointer values)", func() {
+			str := "hello"
+			data := struct {
+				Name   *string
+				Active bool
+				List   *[]string
+			}{
+				Name:   &str,
+				Active: true,
+				List:   &[]string{"hello", "world"},
+			}
+
+			s := Struct().Keys(StructKeys{
+				"Name":   String(),
+				"Active": Bool(),
+				"List": Slice().Items(
+					String(),
+				),
+			})
+
+			Expect(Validate(&data, s)).To(BeNil())
+		})
+
 		It("Should fail if one schema mis-match", func() {
 			data := struct {
 				Name   string
@@ -110,6 +167,28 @@ var _ = Describe("Struct", func() {
 			})
 
 			Expect(Validate(data, s)).To(Equal(ErrAnyType))
+		})
+
+		It("Should fail if one schema mis-match *", func() {
+			data := struct {
+				Name   string
+				Active bool
+				List   []string
+			}{
+				Name:   "hello",
+				Active: true,
+				List:   []string{"hello", "world"},
+			}
+
+			s := Struct().Keys(StructKeys{
+				"Name":   String(),
+				"Active": String(),
+				"List": Slice().Items(
+					String(),
+				),
+			})
+
+			Expect(Validate(&data, s)).To(Equal(ErrAnyType))
 		})
 	})
 })

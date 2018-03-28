@@ -21,6 +21,12 @@ var _ = Describe("Slice", func() {
 			Expect(Validate([]string{}, s)).To(BeNil())
 		})
 
+		It("Should pass if data type is *slice", func() {
+			s := Slice()
+			data := []string{}
+			Expect(Validate(&data, s)).To(BeNil())
+		})
+
 		It("Should fail if Any property fails", func() {
 			s := Slice().Required()
 
@@ -68,14 +74,29 @@ var _ = Describe("Slice", func() {
 			Expect(Validate(data, s)).To(BeNil())
 		})
 
+		It("Error should be nil if slice is bigger than *slice", func() {
+			s := Slice().Min(1)
+			Expect(Validate(&data, s)).To(BeNil())
+		})
+
 		It("Error should be nil if slice is equal", func() {
 			s := Slice().Min(2)
 			Expect(Validate(data, s)).To(BeNil())
 		})
 
+		It("Error should be nil if slice is equal *", func() {
+			s := Slice().Min(2)
+			Expect(Validate(&data, s)).To(BeNil())
+		})
+
 		It("Error should be not nil if slice is smaller than", func() {
 			s := Slice().Min(3)
 			Expect(Validate(data, s)).To(Equal(ErrSliceMin))
+		})
+
+		It("Error should be not nil if slice is smaller than *", func() {
+			s := Slice().Min(3)
+			Expect(Validate(&data, s)).To(Equal(ErrSliceMin))
 		})
 	})
 
@@ -135,6 +156,17 @@ var _ = Describe("Slice", func() {
 				joi.String(),
 			)
 			Expect(Validate(data, s)).To(BeNil())
+		})
+
+		It("Error should be nil if items are matching *String", func() {
+			pData := []*string{}
+			str1 := "hello"
+			str2 := "world"
+			pData = append(pData, &str1, &str2)
+			s := Slice().Items(
+				joi.String(),
+			)
+			Expect(Validate(&pData, s)).To(BeNil())
 		})
 
 		It("Error should be not nil if items are not matching", func() {

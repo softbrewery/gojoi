@@ -89,13 +89,21 @@ func (s *IntSchema) Validate(value interface{}) error {
 		return err
 	}
 
-	vValue := reflect.ValueOf(value)
+	typeOf := reflect.TypeOf(value).String()
 
-	if vValue.Kind().String() != "int" {
+	if typeOf != "int" && typeOf != "*int" {
 		return ErrAnyType
 	}
 
-	cValue := vValue.Int()
+	vValue := reflect.ValueOf(value)
+
+	var cValue int64
+
+	if typeOf == "*int" {
+		cValue = reflect.Indirect(vValue).Int()
+	} else {
+		cValue = vValue.Int()
+	}
 
 	// Validate Min
 	if IsSet(s.min) && *s.min > cValue {

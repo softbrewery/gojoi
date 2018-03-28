@@ -28,11 +28,23 @@ func (s *BoolSchema) Validate(value interface{}) error {
 		return err
 	}
 
-	vValue := reflect.ValueOf(value)
+	typeOf := reflect.TypeOf(value).String()
 
-	if vValue.Kind().String() != "bool" {
+	if typeOf != "bool" && typeOf != "*bool" {
 		return ErrAnyType
 	}
+
+	vValue := reflect.ValueOf(value)
+
+	var cValue bool
+
+	if typeOf == "*bool" {
+		cValue = reflect.Indirect(vValue).Bool()
+	} else {
+		cValue = vValue.Bool()
+	}
+
+	_ = cValue
 
 	return nil
 }

@@ -67,11 +67,23 @@ func (s *SliceSchema) Validate(value interface{}) error {
 
 	vValue := reflect.ValueOf(value)
 
-	if vValue.Kind().String() != "slice" {
+	if vValue.Kind().String() != "slice" && vValue.Kind().String() != "ptr" {
 		return ErrAnyType
 	}
 
-	vLength := vValue.Len()
+	var vLength int
+	if vValue.Kind().String() == "ptr" {
+		vLength = reflect.Indirect(vValue).Len()
+	} else {
+		vLength = vValue.Len()
+	}
+
+	var v reflect.Value
+	if vValue.Kind().String() != "ptr" {
+		v = reflect.ValueOf(value)
+	} else {
+		v = reflect.Indirect(reflect.ValueOf(value))
+	}
 
 	// Validate Min
 	if IsSet(s.min) && *s.min > vLength {
@@ -88,7 +100,7 @@ func (s *SliceSchema) Validate(value interface{}) error {
 	// Validate Items
 	if IsSet(s.items) {
 		for i := 0; i < vLength; i++ {
-			err := (*s.items).Root().Validate(vValue.Index(i).Interface())
+			err := (*s.items).Root().Validate(v.Index(i).Interface())
 			if err != nil {
 				return err
 			}

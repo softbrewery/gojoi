@@ -130,13 +130,21 @@ func (s *StringSchema) Validate(value interface{}) error {
 		return err
 	}
 
-	vValue := reflect.ValueOf(value)
+	typeOf := reflect.TypeOf(value).String()
 
-	if vValue.Kind().String() != "string" {
+	if typeOf != "string" && typeOf != "*string" {
 		return ErrAnyType
 	}
 
-	cValue := vValue.String()
+	vValue := reflect.ValueOf(value)
+
+	var cValue string
+
+	if typeOf == "*string" {
+		cValue = reflect.Indirect(vValue).String()
+	} else {
+		cValue = vValue.String()
+	}
 
 	// Validate Min
 	if IsSet(s.min) && *s.min > len(cValue) {

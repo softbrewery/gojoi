@@ -40,15 +40,23 @@ func (s *StructSchema) Validate(value interface{}) error {
 	}
 
 	r := reflect.TypeOf(value)
-	v := reflect.ValueOf(value)
 
-	if r.Kind().String() != "struct" {
+	if r.Kind().String() != "struct" && r.Kind().String() != "ptr" {
 		return ErrAnyType
 	}
 
+	var v reflect.Value
+	if r.Kind().String() != "ptr" {
+		v = reflect.ValueOf(value)
+	} else {
+		v = reflect.Indirect(reflect.ValueOf(value))
+	}
+
+	rr := reflect.TypeOf(v.Interface())
+
 	if IsSet(s.keys) {
-		for i := 0; i < r.NumField(); i++ {
-			fieldName := r.Field(i).Name
+		for i := 0; i < rr.NumField(); i++ {
+			fieldName := rr.Field(i).Name
 			schema, ok := (*s.keys)[fieldName]
 
 			if ok {

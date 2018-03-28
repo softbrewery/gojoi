@@ -21,6 +21,12 @@ var _ = Describe("Int", func() {
 			Expect(Validate(100, s)).To(BeNil())
 		})
 
+		It("Should pass if data type is *int", func() {
+			s := Int()
+			data := 100
+			Expect(Validate(&data, s)).To(BeNil())
+		})
+
 		It("Should fail if Any property fails", func() {
 			s := Int().Required()
 
@@ -66,14 +72,32 @@ var _ = Describe("Int", func() {
 			Expect(Validate(5, s)).To(BeNil())
 		})
 
+		It("Error should be nil if value is bigger than *int", func() {
+			s := Int().Min(4)
+			data := 5
+			Expect(Validate(&data, s)).To(BeNil())
+		})
+
 		It("Error should be nil if value is equal", func() {
 			s := Int().Min(5)
 			Expect(Validate(5, s)).To(BeNil())
 		})
 
+		It("Error should be nil if value is equal *int", func() {
+			s := Int().Min(5)
+			data := 5
+			Expect(Validate(&data, s)).To(BeNil())
+		})
+
 		It("Error should be not nil if value is smaller than", func() {
 			s := Int().Min(6)
 			Expect(Validate(5, s)).To(Equal(ErrIntMin))
+		})
+
+		It("Error should be not nil if value is smaller than *int", func() {
+			s := Int().Min(6)
+			data := 5
+			Expect(Validate(&data, s)).To(Equal(ErrIntMin))
 		})
 	})
 

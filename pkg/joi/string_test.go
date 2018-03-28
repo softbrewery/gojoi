@@ -21,6 +21,12 @@ var _ = Describe("String", func() {
 			Expect(Validate("hello", s)).To(BeNil())
 		})
 
+		It("Should pass if data type is *string", func() {
+			s := String()
+			data := "hello"
+			Expect(Validate(&data, s)).To(BeNil())
+		})
+
 		It("Should fail if Any property fails", func() {
 			s := String().Required()
 
@@ -66,15 +72,34 @@ var _ = Describe("String", func() {
 			Expect(Validate("hello", s)).To(BeNil())
 		})
 
+		It("Error should be nil if value is bigger than *string", func() {
+			s := String().Min(4)
+			data := "hello"
+			Expect(Validate(&data, s)).To(BeNil())
+		})
+
 		It("Error should be nil if value is equal", func() {
 			s := String().Min(5)
 			Expect(Validate("hello", s)).To(BeNil())
+		})
+
+		It("Error should be nil if value is equal *string", func() {
+			s := String().Min(5)
+			data := "hello"
+			Expect(Validate(&data, s)).To(BeNil())
 		})
 
 		It("Error should be not nil if value is smaller than", func() {
 			s := String().Min(6)
 			Expect(Validate("hello", s)).To(Equal(ErrStringMin))
 		})
+
+		It("Error should be not nil if value is smaller than *string", func() {
+			s := String().Min(6)
+			data := "hello"
+			Expect(Validate(&data, s)).To(Equal(ErrStringMin))
+		})
+
 	})
 
 	Describe("Max", func() {
