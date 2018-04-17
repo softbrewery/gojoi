@@ -6,6 +6,7 @@ Object schema description language and validator for golang. (Inspired by [Hapi.
 
 [![Build Status](https://travis-ci.org/softbrewery/gojoi.svg?branch=master)](https://travis-ci.org/softbrewery/gojoi)
 [![codecov](https://codecov.io/gh/softbrewery/gojoi/branch/master/graph/badge.svg)](https://codecov.io/gh/softbrewery/gojoi)
+[![GitHub license](https://img.shields.io/github/license/softbrewery/gojoi.svg)](https://github.com/softbrewery/gojoi/blob/master/LICENSE)
 
 ## Install
 ```shell
