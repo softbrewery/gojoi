@@ -127,8 +127,10 @@ func (s *AnySchema) Validate(value interface{}) error {
 	}
 	// Validate Zero
 	if IsSet(s.zero) && *s.zero == true {
-		if v := reflect.Zero(reflect.TypeOf(value)).Interface(); v != value {
-			return ErrAnyZero
+		if value != nil {
+			if v := reflect.Zero(reflect.TypeOf(value)).Interface(); v != value {
+				return ErrAnyZero
+			}
 		}
 	}
 	// Validate NonZero

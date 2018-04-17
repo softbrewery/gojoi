@@ -108,16 +108,83 @@ var _ = Describe("Any", func() {
 
 	Describe("Zero", func() {
 
-		It("Error should be nil if value is zero", func() {
-			s := Any().Zero()
-			data := ""
+		Context("String", func() {
+
+			It("Error should be nil if value is zero", func() {
+				s := Any().Zero()
+				data := ""
+				Expect(Validate(data, s)).To(BeNil())
+			})
+
+			It("Error should be not nil if value is not zero", func() {
+				s := Any().Zero()
+				data := "a"
+				Expect(Validate(data, s)).To(Equal(ErrAnyZero))
+			})
+		})
+
+		Context("Int", func() {
+
+			It("Error should be nil if value is zero", func() {
+				s := Any().Zero()
+				data := 0
+				Expect(Validate(data, s)).To(BeNil())
+			})
+
+			It("Error should be not nil if value is not zero", func() {
+				s := Any().Zero()
+				data := 1
+				Expect(Validate(data, s)).To(Equal(ErrAnyZero))
+			})
+		})
+
+		Context("Bool", func() {
+
+			It("Error should be nil if value is zero", func() {
+				s := Any().Zero()
+				data := false
+				Expect(Validate(data, s)).To(BeNil())
+			})
+
+			It("Error should be not nil if value is not zero", func() {
+				s := Any().Zero()
+				data := true
+				Expect(Validate(data, s)).To(Equal(ErrAnyZero))
+			})
+		})
+
+		Context("Struct", func() {
+
+			It("Error should be nil if value is zero", func() {
+				s := Any().Zero()
+				var data interface{}
+				Expect(Validate(data, s)).To(BeNil())
+			})
+
+			It("Error should be not nil if value is not zero", func() {
+				s := Any().Zero()
+				data := struct {
+					Name string
+				}{
+					Name: "hello",
+				}
+				Expect(Validate(data, s)).To(Equal(ErrAnyZero))
+			})
+		})
+	})
+
+	Describe("NonZero", func() {
+
+		It("Error should be nil if value is non-zero", func() {
+			s := Any().NonZero()
+			data := "a"
 			Expect(Validate(data, s)).To(BeNil())
 		})
 
-		It("Error should be not nil if value is not zero", func() {
-			s := Any().Zero()
-			data := "a"
-			Expect(Validate(data, s)).To(Equal(ErrAnyZero))
+		It("Error should be not nil if value is zero", func() {
+			s := Any().NonZero()
+			data := ""
+			Expect(Validate(data, s)).To(Equal(ErrAnyNonZero))
 		})
 	})
 
