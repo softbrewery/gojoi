@@ -58,6 +58,8 @@ err := joi.Validate(data, schema)
             * [Any().Disallow(values ...interface{})](#anydisallowvalues-interface)
             * [Any().Required()](#anyrequired)
             * [Any().Forbidden()](#anyforbidden)
+            * [Any().Zero()](#anyzero)
+            * [Any().NonZero()](#anynonzero)
             * [Any().Description(desc string)](#anydescriptiondesc-string)
             * [Any().Transform(stage TransformStage, fn TransformFunc)](#anytransformstage-transformstage-fn-transformfunc)
          * [String - inherits from <code>Any</code>](#string---inherits-from-any)
@@ -88,7 +90,7 @@ err := joi.Validate(data, schema)
          * [Struct - inherits from <code>Any</code>](#struct---inherits-from-any)
             * [Struct().Keys(keys StructKeys{...})](#structkeyskeys-structkeys)
 
-<!-- Added by: steven, at: 2018-03-27T19:14+02:00 -->
+<!-- Added by: steven, at: 2018-04-17T18:36+02:00 -->
 
 <!--te-->
 
@@ -534,8 +536,8 @@ schema := joi.Struct().Keys(StructKeys{
 Advanced example:
 ```go
 schema := joi.Struct().Keys(StructKeys{
-    "ID": joi.Forbidden(),
-    "Name": joi.String().Required(),
+    "ID": joi.Zero(),
+    "Name": joi.String().NonZero(),
     "Tags": joi.Slice().Items(
         joi.String().UpperCase().Length(4),
     ).Max(10),
