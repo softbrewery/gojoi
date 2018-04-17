@@ -179,6 +179,22 @@ Marks a key as forbidden which will not allow any value except `nil`. Used to ex
 schema := joi.Any().Forbidden()
 ```
 
+#### `Any().Zero()`
+
+Requires the value to be a zero value (go default init value)
+
+```go
+schema := joi.Any().Zero()
+```
+
+#### `Any().NonZero()`
+
+Requires the value to be a non-zero value (go default init value)
+
+```go
+schema := joi.Any().NonZero()
+```
+
 #### `Any().Description(desc string)`
 
 Annotates the key where:

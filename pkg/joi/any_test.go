@@ -106,6 +106,21 @@ var _ = Describe("Any", func() {
 		})
 	})
 
+	Describe("Zero", func() {
+
+		It("Error should be nil if value is zero", func() {
+			s := Any().Zero()
+			data := ""
+			Expect(Validate(data, s)).To(BeNil())
+		})
+
+		It("Error should be not nil if value is not zero", func() {
+			s := Any().Zero()
+			data := "a"
+			Expect(Validate(data, s)).To(Equal(ErrAnyZero))
+		})
+	})
+
 	Describe("Allow", func() {
 
 		It("Error should be nil if value is in allow list (int)", func() {

@@ -9,6 +9,8 @@ var (
 	ErrAnyType      = NewError("interface", "Value of wrong data type")
 	ErrAnyRequired  = NewError("interface", "Value is required")
 	ErrAnyForbidden = NewError("interface", "Value is forbidden")
+	ErrAnyZero      = NewError("interface", "Value should be zero")
+	ErrAnyNonZero   = NewError("interface", "Value should be non-zero")
 	ErrAnyAllow     = NewError("interface", "Value is not matching allowed values")
 	ErrAnyDisallow  = NewError("interface", "Value is matching disallowed values")
 )
@@ -21,6 +23,8 @@ type AnySchema struct {
 
 	required  *bool
 	forbidden *bool
+	zero      *bool
+	nonzero   *bool
 	allow     *[]interface{}
 	disallow  *[]interface{}
 
@@ -59,6 +63,18 @@ func (s *AnySchema) Required() *AnySchema {
 // Forbidden marks a key as forbidden which will not allow any value except nil
 func (s *AnySchema) Forbidden() *AnySchema {
 	s.forbidden = BoolToPointer(true)
+	return s
+}
+
+// Zero marks a key as required to be a zero value
+func (s *AnySchema) Zero() *AnySchema {
+	s.zero = BoolToPointer(true)
+	return s
+}
+
+// NonZero marks a key as required to be a non-zero value
+func (s *AnySchema) NonZero() *AnySchema {
+	s.nonzero = BoolToPointer(true)
 	return s
 }
 
@@ -108,6 +124,18 @@ func (s *AnySchema) Validate(value interface{}) error {
 	// Validate Required
 	if IsSet(s.required) && *s.required == true && value == nil {
 		return ErrAnyRequired
+	}
+	// Validate Zero
+	if IsSet(s.zero) && *s.zero == true {
+		if v := reflect.Zero(reflect.TypeOf(value)).Interface(); v != value {
+			return ErrAnyZero
+		}
+	}
+	// Validate NonZero
+	if IsSet(s.nonzero) && *s.nonzero == true {
+		if v := reflect.Zero(reflect.TypeOf(value)).Interface(); v == value {
+			return ErrAnyNonZero
+		}
 	}
 	// Validate Allow
 	if IsSet(s.allow) {
