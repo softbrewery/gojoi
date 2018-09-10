@@ -34,6 +34,10 @@ func Struct() *StructSchema {
 	return NewStructSchema()
 }
 
+func Map() *MapSchema {
+	return NewMapSchema()
+}
+
 // Int ...
 func Int() *IntSchema {
 	return NewIntSchema()
