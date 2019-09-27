@@ -11,7 +11,7 @@ Object schema description language and validator for golang. (Inspired by [Hapi.
 
 ## Install
 ```shell
-$ go get github.com/softbrewery/gojoi
+$ go get github.com/softbrewery/gojoi/pkg/joi
 ```
 
 ## Usage
